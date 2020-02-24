@@ -30,22 +30,25 @@ service.interceptors.response.use(
     // code == 50002: already login in other place
     // code == 50003: access token expired
     // code == 50004: invalid user (user not exist)
-    // code == 50005: username or password is incorrect
+    // code == 50005: name or password is incorrect
     // You can change this part for your own usage.
     const res = response.data
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 500 || res.code === 503) {
+        if (res.msg.indexOf('用户或密码错误')) {
+          return
+        }
         MessageBox.confirm(
-          'You have been logged out, try to login again.',
-          'Log out',
+          '你已经退出登录,是否需要重新登录',
+          '登出',
           {
-            confirmButtonText: 'Relogin',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
             type: 'warning'
           }
         ).then(() => {

@@ -6,9 +6,9 @@ import store from '@/store'
 export interface IUserState {
   token: string
   name: string
-  avatar: string
-  introduction: string
-  roles: string[]
+  avatar: string,
+  asyncRoute: any,
+  menus: any
 }
 
 @Module({ dynamic: true, store, name: 'user' })
@@ -16,8 +16,8 @@ class User extends VuexModule implements IUserState {
   public token = getToken() || ''
   public name = ''
   public avatar = ''
-  public introduction = ''
-  public roles: string[] = []
+  public asyncRoute = []
+  public menus = []
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -35,29 +35,28 @@ class User extends VuexModule implements IUserState {
   }
 
   @Mutation
-  private SET_INTRODUCTION(introduction: string) {
-    this.introduction = introduction
+  private SET_ASYNC_ROUTE(menus: object[]) {
+
   }
 
   @Mutation
-  private SET_ROLES(roles: string[]) {
-    this.roles = roles
+  private SET_MENUS(menus: object[]) {
+    this.menus = menus
   }
 
   @Action
-  public async Login(userInfo: { username: string, password: string }) {
-    let { username, password } = userInfo
-    username = username.trim()
-    const { data } = await login({ username, password })
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+  public async Login(userInfo: { name: string, password: string }) {
+    let { name, password } = userInfo
+    name = name.trim()
+    const data: any = await login({ name, password })
+    setToken(data.token)
+    this.SET_TOKEN(data.token)
   }
 
   @Action
   public ResetToken() {
     removeToken()
     this.SET_TOKEN('')
-    this.SET_ROLES([])
   }
 
   @Action
@@ -65,19 +64,14 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { data } = await getUserInfo({ /* Your params here */ })
+    const data: any = await getUserInfo({ /* Your params here */ })
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
-    const { roles, name, avatar, introduction } = data.user
+    const { nickname, icon } = data.user
     // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(roles)
-    this.SET_NAME(name)
-    this.SET_AVATAR(avatar)
-    this.SET_INTRODUCTION(introduction)
+    this.SET_NAME(nickname)
+    this.SET_AVATAR(icon)
   }
 
   @Action
@@ -88,7 +82,6 @@ class User extends VuexModule implements IUserState {
     await logout()
     removeToken()
     this.SET_TOKEN('')
-    this.SET_ROLES([])
   }
 }
 

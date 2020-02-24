@@ -3,12 +3,6 @@
     <div class="dashboard-text">
       name:{{ name }}
     </div>
-    <div class="dashboard-text">
-      roles:<span
-        v-for="role in roles"
-        :key="role"
-      >{{ role }}</span>
-    </div>
   </div>
 </template>
 
@@ -22,10 +16,6 @@ import { UserModule } from '@/store/modules/user'
 export default class extends Vue {
   get name() {
     return UserModule.name
-  }
-
-  get roles() {
-    return UserModule.roles
   }
 }
 </script>

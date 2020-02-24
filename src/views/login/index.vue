@@ -10,21 +10,21 @@
     >
       <div class="title-container">
         <h3 class="title">
-          Login Form
+          房呼管理系统
         </h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="name">
         <span class="svg-container">
           <svg-icon name="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          name="username"
+          ref="name"
+          v-model="loginForm.name"
+          name="name"
           type="text"
           autocomplete="on"
-          placeholder="username"
+          placeholder="name"
         />
       </el-form-item>
 
@@ -56,13 +56,13 @@
         style="width:100%; margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >
-        Sign in
+        登录
       </el-button>
 
       <div style="position:relative">
         <div class="tips">
-          <span> username: admin </span>
-          <span> password: any </span>
+          <span> 账号: admin </span>
+          <span> 密码: any </span>
         </div>
       </div>
     </el-form>
@@ -75,14 +75,14 @@ import { Route } from 'vue-router'
 import { Dictionary } from 'vue-router/types/router'
 import { Form as ElForm, Input } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
-import { isValidUsername } from '@/utils/validate'
+import { isValidname } from '@/utils/validate'
 
 @Component({
   name: 'Login'
 })
 export default class extends Vue {
-  private validateUsername = (rule: any, value: string, callback: Function) => {
-    if (!isValidUsername(value)) {
+  private validatename = (rule: any, value: string, callback: Function) => {
+    if (!isValidname(value)) {
       callback(new Error('Please enter the correct user name'))
     } else {
       callback()
@@ -96,11 +96,11 @@ export default class extends Vue {
     }
   }
   private loginForm = {
-    username: 'admin',
-    password: '111111'
+    name: 'admin',
+    password: '123456'
   }
   private loginRules = {
-    username: [{ validator: this.validateUsername, trigger: 'blur' }],
+    name: [{ validator: this.validatename, trigger: 'blur' }],
     password: [{ validator: this.validatePassword, trigger: 'blur' }]
   }
   private passwordType = 'password'
@@ -121,8 +121,8 @@ export default class extends Vue {
   }
 
   mounted() {
-    if (this.loginForm.username === '') {
-      (this.$refs.username as Input).focus()
+    if (this.loginForm.name === '') {
+      (this.$refs.name as Input).focus()
     } else if (this.loginForm.password === '') {
       (this.$refs.password as Input).focus()
     }

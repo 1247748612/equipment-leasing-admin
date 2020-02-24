@@ -3,7 +3,9 @@ import Vue from 'vue'
 import 'normalize.css'
 import ElementUI from 'element-ui'
 import SvgIcon from 'vue-svgicon'
+import Avue from '@smallwei/avue'
 
+import '@smallwei/avue/lib/index.css'
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
 
@@ -13,6 +15,7 @@ import router from '@/router'
 import '@/icons/components'
 import '@/permission'
 
+Vue.use(Avue);
 Vue.use(ElementUI)
 Vue.use(SvgIcon, {
   tagName: 'svg-icon',

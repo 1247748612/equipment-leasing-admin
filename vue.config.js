@@ -16,6 +16,17 @@ module.exports = {
       ]
     }
   },
+  devServer: {
+    proxy: {
+      '/api-dev': {
+        target: 'http://192.168.0.224:8080',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api-dev': '/'
+        }
+      }
+    }
+  },
   chainWebpack(config) {
     // Provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
