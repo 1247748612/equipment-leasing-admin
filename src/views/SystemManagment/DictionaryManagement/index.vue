@@ -122,6 +122,14 @@ export default class Menu extends Vue {
         rules: [
           { required: true, message: '必须选择类型', trigger: 'blur' }
         ]
+      },
+      {
+        label: '名称',
+        prop: 'name',
+        span: 24,
+        rules: [
+          { required: true, message: '必须输入名称', trigger: 'blur' }
+        ]
       }, {
         label: '对应值',
         span: 24,

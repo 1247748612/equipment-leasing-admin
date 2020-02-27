@@ -50,8 +50,9 @@ function recursiveChildrenRoute(menu: menuDto) : RouteConfig | any {
   routeItem.component = () => import(`@/views/${componentPath.replace('@/views/', '')}`)
 
   if ((menu.componentPath && menu.componentPath.toLocaleLowerCase() === 'layout')) {
+    console.log(menu.title, 'layout')
     routeItem.redirect = menu.redirect
-      routeItem.component = Layout
+    routeItem.component = Layout
   } else {
     routeItem.component = () => import(`@/views/${componentPath.replace('@/views/', '')}`)
   }

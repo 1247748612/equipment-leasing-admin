@@ -16,7 +16,6 @@ export default class extends Vue {}
   .avue-crud {
     box-sizing: content-box !important;
   }
-  
   path { fill: inherit !important }
 
 </style>
