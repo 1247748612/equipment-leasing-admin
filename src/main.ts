@@ -12,6 +12,7 @@ import '@/styles/index.scss'
 import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
+import axios from 'axios'
 import '@/icons/components'
 import '@/permission'
 
@@ -24,6 +25,11 @@ Vue.use(SvgIcon, {
 })
 
 Vue.config.productionTip = false
+
+Vue.prototype.$httpajax = axios.create({
+  baseURL: process.env.VUE_APP_BASE_API
+})
+
 
 new Vue({
   router,

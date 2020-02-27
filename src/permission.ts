@@ -10,6 +10,7 @@ NProgress.configure({ showSpinner: false })
 const whiteList = ['/login']
 
 router.beforeEach(async(to: Route, _: Route, next: any) => {
+  console.log(111111111111111)
   // Start progress bar
   NProgress.start()
 
@@ -21,20 +22,24 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
       NProgress.done()
     } else {
       // Check whether the user has obtained his permission roles
-      if (UserModule.menus.length === 0) {
+      if (!UserModule.roles.length) {
         try {
           // Get user info, including roles
           await UserModule.GetUserInfo()
+          await router.addRoutes(UserModule.dynamicRoute)
           // Set the replace: true, so the navigation will not leave a history record
+          console.log('tototototo r', to)
           next({ ...to, replace: true })
         } catch (err) {
           // Remove token and redirect to login page
           UserModule.ResetToken()
           Message.error(err || 'Has Error')
+          console.log('tototototo', to, err)
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
       } else {
+        console.log(to)
         next()
       }
     }

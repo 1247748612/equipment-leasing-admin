@@ -19,3 +19,35 @@ export const logout = () =>
     url: '/admin/logout',
     method: 'post'
   })
+
+export const getUsers = (params: any) => {
+  return request({
+    url: '/users',
+    method: 'get',
+    params
+  })
+}
+
+export const createUsers = (data: any) => {
+  return request({
+    url: '/users',
+    method: 'post',
+    data
+  })
+}
+
+export const updateUsers = (data) => {
+  return request({
+    url: '/users',
+    method: 'put',
+    data
+  })
+}
+
+export const deleteUsers = (data: any) => {
+  return request({
+    url: '/users',
+    method: 'delete',
+    data
+  })
+}

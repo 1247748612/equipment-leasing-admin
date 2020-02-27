@@ -33,16 +33,13 @@ service.interceptors.response.use(
     // code == 50005: name or password is incorrect
     // You can change this part for your own usage.
     const res = response.data
-    if (res.code !== 200) {
+    if (res.code !== 200 && res.code !== 203) {
       Message({
         message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
       if (res.code === 500 || res.code === 503) {
-        if (res.msg.indexOf('用户或密码错误')) {
-          return
-        }
         MessageBox.confirm(
           '你已经退出登录,是否需要重新登录',
           '登出',
@@ -51,14 +48,19 @@ service.interceptors.response.use(
             cancelButtonText: '取消',
             type: 'warning'
           }
-        ).then(() => {
-          UserModule.ResetToken()
-          location.reload() // To prevent bugs from vue-router
-        })
+          ).then(() => {
+            UserModule.ResetToken()
+            location.reload() // To prevent bugs from vue-router
+          })
+        } else {
+        Message.error(res.msg)
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error'))
+    } else if (res.code === 203) {
+      UserModule.ResetToken()
+      return res
     } else {
-      return response.data
+      return res
     }
   },
   (error) => {

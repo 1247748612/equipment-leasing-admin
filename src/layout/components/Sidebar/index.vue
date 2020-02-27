@@ -25,6 +25,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import SidebarItem from './SidebarItem.vue'
 import variables from '@/styles/_variables.scss'
+import { UserModule } from '../../../store/modules/user'
 
 @Component({
   name: 'SideBar',
@@ -38,7 +39,8 @@ export default class extends Vue {
   }
 
   get routes() {
-    return (this.$router as any).options.routes
+    console.log(UserModule.asyncRoute)
+    return UserModule.asyncRoute
   }
 
   get variables() {

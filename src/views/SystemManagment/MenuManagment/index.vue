@@ -1,6 +1,6 @@
 <template>
   <div class="menu-container">
-    <h3>菜单管理</h3>
+    <h3>{{ $route.meta.title || '默认标题' }}</h3>
     <avue-crud
       ref="crud"
       v-model="defaultForm"
@@ -12,16 +12,6 @@
       @row-save="saveRow"
       @row-dblclick="dblclickRow"
     >
-      <!-- 自定义菜单左 -->
-      <template slot="menuLeft">
-        <el-button
-          type="primary"
-          size="small"
-        >
-          自定义按钮
-        </el-button>
-      </template>
-
       <!-- 自定义图标 -->
       <template
         slot="icon"
@@ -77,13 +67,14 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { UserModule } from '../../store/modules/user'
+import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
-import { Message } from 'element-ui'
+
 @Component({
   name: 'MenuManager'
 })
 export default class Menu extends Vue {
+  // 单选框选项
   radioDicData = [
     {
       label: '否',
@@ -95,9 +86,11 @@ export default class Menu extends Vue {
     }
   ]
 
+  // CRUD默认参数
   defaultForm = { parentId: 0 }
 
   option: object = {
+    refreshBtn: false,
     title: '菜单管理',
     translate: false,
     stripe: true,
@@ -162,7 +155,8 @@ export default class Menu extends Vue {
               // required: true,
               message: '请正确输入组件路径',
               trigger: 'blur'
-            }]
+            }],
+            tip: '若上级菜单为根菜单,并且还有子菜单请填写为Layout'
           }
         ]
       },
@@ -225,11 +219,13 @@ export default class Menu extends Vue {
       {
         label: '菜单id',
         prop: 'id',
+        hide: true,
         display: false
       },
       {
         label: '上级菜单',
         prop: 'parentId',
+        hide: true,
         type: 'tree',
         dicData: this.parentMenuDicData,
         value: 0
@@ -246,6 +242,7 @@ export default class Menu extends Vue {
       }, {
         label: '路由名',
         prop: 'name',
+        hide: true,
         display: false
 
       }, {
@@ -255,7 +252,14 @@ export default class Menu extends Vue {
       }, {
         label: '跳转路由',
         prop: 'redirect',
+        hide: true,
         display: false
+
+      }, {
+        label: '排序',
+        prop: 'rank',
+        type: 'number',
+        value: 1
       }, {
         label: '组件路径',
         prop: 'componentPath',
@@ -295,6 +299,7 @@ export default class Menu extends Vue {
     ]
   }
 
+  // 获取用户菜单信息
   get menuData() {
     return UserModule.menus
   }
@@ -319,7 +324,6 @@ export default class Menu extends Vue {
         return []
       }
       menus.forEach((item: any) => {
-        console.log(item)
         itemChildren.push({
           label: item.title,
           value: item.id,
@@ -336,61 +340,58 @@ export default class Menu extends Vue {
     }
   }
 
+  // 处理空数据时的新增按钮执行方法
   handleAdd() {
     const crud: any = this.$refs.crud
     crud.rowAdd()
   }
 
+  // 行删除执行方法
   async deleteRow(row: any, index: number) {
-    const params = [row.id]
-    const response = await deleteMenus(params)
-    Message({
-      message: '删除成功',
-      type: 'success'
+    this.$confirm(`此操作将会删除${row.title}, 是否继续?`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(async() => {
+      const params = [row.id]
+      try {
+        const { msg, data } = await deleteMenus(params)
+        this.$message.success(msg)
+      } catch {
+        this.$message.error('删除失败')
+      }
+      location.reload()
     })
-    location.reload()
   }
 
-  async saveRow(row: any, done: Function, loading: boolean) {
-    loading = true
-    const response = await createMenus(row)
-    Message({
-      message: '新增',
-      type: 'success'
-    })
-    done()
-    location.reload()
-  }
-
-  async updateRow(row: any, index: number, done: Function, loading: boolean) {
-    loading = true
-    console.log(row)
+  // 行更新执行方法
+  async saveRow(row: any, done: Function, loading: Function) {
     try {
-      const response = await updateMenus(row)
-      console.log(response, 'wwww')
-      Message({
-        message: '更新成功',
-        type: 'success'
-      })
+      const { msg, data } = await createMenus(row)
+      this.$message.success(msg)
     } catch {
-      Message.error('编辑失败')
+      this.$message.error('新增失败')
     }
     done()
     location.reload()
   }
 
+  // 行更新执行方法
+  async updateRow(row: any, index: number, done: Function, loading: Function) {
+    try {
+      const { msg, data } = await updateMenus(row)
+      this.$message.success(msg)
+      location.reload()
+    } catch {
+      this.$message.error('更新失败')
+    }
+    done()
+  }
+
+  // 行双击 打开新增页面指定上级菜单为当前双击的行菜单
   async dblclickRow(row: any, column: any) {
     this.defaultForm.parentId = row.id
     this.$refs['crud'].rowAdd()
-    console.log(row, column)
-  }
-
-  created() {
-    let index = 0
-    // while (index < 20) {
-    //   index += 1
-    //   this.data.push(this.data[0])
-    // }
   }
 }
 </script>

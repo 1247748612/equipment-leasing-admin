@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 export interface IArticleData {
   id: number
   status: string
@@ -14,4 +16,10 @@ export interface IArticleData {
   reviewer: string
   type: string
   pageviews: number
+}
+
+export interface ReturnResponseData  {
+  msg: string,
+  data: object[],
+  code: number
 }

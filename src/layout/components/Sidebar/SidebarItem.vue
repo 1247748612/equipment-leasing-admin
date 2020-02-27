@@ -73,7 +73,6 @@ export default class extends Vue {
   @Prop({ default: false }) private isCollapse!: boolean
   @Prop({ default: true }) private isFirstLevel!: boolean
   @Prop({ default: '' }) private basePath!: string
-
   get showingChildNumber() {
     if (this.item.children) {
       const showingChildren = this.item.children.filter((item) => {
@@ -87,7 +86,6 @@ export default class extends Vue {
     }
     return 0
   }
-
   get theOnlyOneChild() {
     if (this.showingChildNumber > 1) {
       return null
@@ -103,7 +101,6 @@ export default class extends Vue {
     // because this.basePath already conatins item's path information
     return { ...this.item, path: '' }
   }
-
   private resolvePath(routePath: string) {
     if (isExternal(routePath)) {
       return routePath
@@ -120,40 +117,32 @@ export default class extends Vue {
 .el-submenu.is-active > .el-submenu__title {
   color: $subMenuActiveText !important;
 }
-
 .full-mode {
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
     min-width: $sideBarWidth !important;
     background-color: $subMenuBg !important;
-
     &:hover {
       background-color: $subMenuHover !important;
     }
   }
 }
-
 .simple-mode {
   &.first-level {
     .submenu-title-noDropdown {
       padding: 0 !important;
       position: relative;
-
       .el-tooltip {
         padding: 0 !important;
       }
     }
-
     .el-submenu {
       overflow: hidden;
-
       &>.el-submenu__title {
         padding: 0px !important;
-
         .el-submenu__icon-arrow {
           display: none;
         }
-
         &>span {
           visibility: hidden;
         }
@@ -167,7 +156,6 @@ export default class extends Vue {
 .svg-icon {
   margin-right: 16px;
 }
-
 .simple-mode {
   .svg-icon {
     margin-left: 20px;

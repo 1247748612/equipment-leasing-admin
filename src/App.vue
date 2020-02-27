@@ -12,3 +12,11 @@ import { Component, Vue } from 'vue-property-decorator'
 })
 export default class extends Vue {}
 </script>
+<style lang="scss">
+  .avue-crud {
+    box-sizing: content-box !important;
+  }
+  
+  path { fill: inherit !important }
+
+</style>

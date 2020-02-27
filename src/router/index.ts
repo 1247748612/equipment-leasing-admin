@@ -67,29 +67,30 @@ export const constantRoutes: RouteConfig[] = [
         }
       }
     ]
-  },
-  {
-    path: '/menus',
-    component: Layout,
-    redirect: '/menus/settings',
-    children: [
-      {
-        path: 'settings',
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/index.vue'),
-        name: 'menus',
-        meta: {
-          title: '菜单设置',
-          icon: 'dashboard'
-        }
-      }
-    ]
-  },
-  {
-    path: '*',
-    redirect: '/404',
-    meta: { hidden: true }
   }
+  // {
+  //   path: '/menussss',
+  //   component: Layout,
+  //   redirect: '/menussss/settingss',
+  //   children: [
+  //     {
+  //       path: 'settingss',
+  //       component: () => import(/* webpackChunkName: "menu" */ '@/views/SystemManagment/MenuManagment/index.vue'),
+  //       name: 'menusssss',
+  //       meta: {
+  //         title: '菜单设置',
+  //         icon: 'dashboard'
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '*',
+  //   redirect: '/login',
+  //   meta: { hidden: true }
+  // }
 ]
+
 
 const createRouter = () => new Router({
   // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
@@ -100,7 +101,6 @@ const createRouter = () => new Router({
       return { x: 0, y: 0 }
     }
   },
-  base: process.env.BASE_URL,
   routes: constantRoutes
 })
 

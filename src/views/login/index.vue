@@ -16,7 +16,7 @@
 
       <el-form-item prop="name">
         <span class="svg-container">
-          <svg-icon name="user" />
+          <svg-icon name="menu" />
         </span>
         <el-input
           ref="name"
@@ -100,8 +100,8 @@ export default class extends Vue {
     password: '123456'
   }
   private loginRules = {
-    name: [{ validator: this.validatename, trigger: 'blur' }],
-    password: [{ validator: this.validatePassword, trigger: 'blur' }]
+    // name: [{ validator: this.validatename, trigger: 'blur' }],
+    // password: [{ validator: this.validatePassword, trigger: 'blur' }]
   }
   private passwordType = 'password'
   private loading = false

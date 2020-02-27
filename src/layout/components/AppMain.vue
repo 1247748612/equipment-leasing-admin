@@ -23,3 +23,9 @@ export default class extends Vue {}
   overflow: hidden;
 }
 </style>
+
+<style lang="scss">
+    * {
+     box-sizing: content-box;
+  }
+</style>
