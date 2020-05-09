@@ -50,7 +50,6 @@
           image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
           desc="暂无数据"
         >
-          <>
           <el-button
             type="primary"
             @click="handleAdd"
@@ -102,7 +101,7 @@ import { getRolesList, updateUserRoles } from '../../../api/roles'
 })
 export default class Menu extends Vue {
   private isShowDialog = false // 角色分配dialog
-  private defaultForm = { parentId: 0 } // CURD默认参数
+  private defaultForm = { pid: null } // CURD默认参数
   private data = [] // CURD默认展示数据
   private roleOptions = [] // 角色分配选项
   private selectRolesData = [] // 角色分配选中数据
@@ -264,8 +263,8 @@ export default class Menu extends Vue {
     }).then(async() => {
       const params = [row.id]
       try {
-        const { msg, data } = await deleteUsers(params)
-        this.$message.success(msg)
+        const { message, data } = await deleteUsers(params)
+        this.$message.success(message)
         this.getUsers()
       } catch {
         this.$message.error('删除失败')
@@ -282,8 +281,8 @@ export default class Menu extends Vue {
       // done()
     }
     try {
-      const { msg, data } = await createUsers(row)
-      this.$message.success(msg)
+      const { message, data } = await createUsers(row)
+      this.$message.success(message)
     } catch {
       this.$message.error('保存失败')
     }
@@ -295,8 +294,8 @@ export default class Menu extends Vue {
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     try {
-      const { code, msg, data } = await updateUsers(row)
-      this.$message.success(msg)
+      const { code, message, data } = await updateUsers(row)
+      this.$message.success(message)
       if (code === 203) {
         location.reload()
         return
@@ -316,8 +315,8 @@ export default class Menu extends Vue {
         roleId: item
       }
     })
-    updateUserRoles(submitData).then(({ msg, data }) => {
-      this.$message.success(msg)
+    updateUserRoles(submitData).then(({ message, data }) => {
+      this.$message.success(message)
       this.isShowDialog = false
       this.getUsers()
     }).catch((error: any) => {
@@ -337,7 +336,7 @@ export default class Menu extends Vue {
         rows: (page && page.pageSize) || this.page.pageSize,
         page: (page && page.currentPage) || this.page.currentPage
       }
-      const { msg, data } = await getUsers(params)
+      const { message, data } = await getUsers(params)
       this.data = data.records
       this.page.total = data.total
       console.log(data, this.page, 'getUsers')
@@ -350,7 +349,7 @@ export default class Menu extends Vue {
   // 获取所有角色
   async getRoles() {
     try {
-      const { msg, data } = await getRolesList()
+      const { message, data } = await getRolesList()
       this.roleOptions = data
       console.log(data, 'getUsers')
     } catch (error) {

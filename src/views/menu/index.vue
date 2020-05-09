@@ -4,7 +4,7 @@
     <avue-crud
       ref="crud"
       v-model="defaultForm"
-      class=""
+      class
       :option="option"
       :data="menuData"
       @row-update="updateRow"
@@ -77,13 +77,16 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { UserModule } from '../../store/modules/user'
+import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
 import { Message } from 'element-ui'
 @Component({
   name: 'MenuManager'
 })
 export default class Menu extends Vue {
+  // 新增和修改时的metaKey
+  private META_KEY = ['title', 'icon', 'alwaysShow', 'hidden', 'breadcrumb', 'noCache', 'affix']
+
   radioDicData = [
     {
       label: '否',
@@ -93,9 +96,9 @@ export default class Menu extends Vue {
       label: '是',
       value: 1
     }
-  ]
+  ];
 
-  defaultForm = { parentId: 0 }
+  defaultForm = { pid: null };
 
   option: object = {
     title: '菜单管理',
@@ -114,12 +117,15 @@ export default class Menu extends Vue {
           {
             label: '菜单名',
             prop: 'title',
-            rules: [{
-              required: true,
-              message: '请输入菜单名',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                required: true,
+                message: '请输入菜单名',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '图标',
             prop: 'icon',
             width: 50,
@@ -135,34 +141,45 @@ export default class Menu extends Vue {
           {
             label: '路由名',
             prop: 'name',
-            rules: [{
-              message: '请输入路由名',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                message: '请输入路由名',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '路由路径',
             prop: 'path',
-            rules: [{
-              message: '请正确输入路由路径',
-              trigger: 'blur'
-            }],
+            rules: [
+              {
+                message: '请正确输入路由路径',
+                trigger: 'blur'
+              }
+            ],
             tip: '路径可为外链(要添加http://前缀)'
-          }, {
+          },
+          {
             label: '跳转路由',
             prop: 'redirect',
-            rules: [{
-              // required: true,
-              message: '请正确输入跳转路由路径(noRedirect不跳转)',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                // required: true,
+                message: '请正确输入跳转路由路径(noRedirect不跳转)',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '组件路径',
             prop: 'componentPath',
-            rules: [{
-              // required: true,
-              message: '请正确输入组件路径',
-              trigger: 'blur'
-            }]
+            rules: [
+              {
+                // required: true,
+                message: '请正确输入组件路径',
+                trigger: 'blur'
+              }
+            ]
           }
         ]
       },
@@ -180,7 +197,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 0
-          }, {
+          },
+          {
             label: '总是显示根路由',
             prop: 'alwaysShow',
             type: 'radio',
@@ -189,7 +207,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 0
-          }, {
+          },
+          {
             label: '面包屑显示',
             prop: 'breadcrumb',
             type: 'radio',
@@ -198,7 +217,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 1
-          }, {
+          },
+          {
             label: '缓存页面',
             prop: 'noCache',
             type: 'radio',
@@ -207,7 +227,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 1
-          }, {
+          },
+          {
             label: '固定在面包屑最前面',
             prop: 'affix',
             type: 'radio',
@@ -229,63 +250,80 @@ export default class Menu extends Vue {
       },
       {
         label: '上级菜单',
-        prop: 'parentId',
+        prop: 'pid',
         type: 'tree',
         dicData: this.parentMenuDicData,
         value: 0
-      }, {
+      },
+      {
         label: '菜单名',
         prop: 'title',
         display: false
-      }, {
+      },
+      {
         label: '图标',
         prop: 'icon',
         width: 50,
         display: false,
         slot: true
-      }, {
+      },
+      {
+        label: '排序',
+        prop: 'sort',
+        width: 50,
+        default: 1
+        // hide: true
+        // slot: true
+      },
+      {
         label: '路由名',
         prop: 'name',
         display: false
-
-      }, {
+      },
+      {
         label: '路由路径',
         prop: 'path',
         display: false
-      }, {
+      },
+      {
         label: '跳转路由',
         prop: 'redirect',
         display: false
-      }, {
+      },
+      {
         label: '组件路径',
         prop: 'componentPath',
         display: false
-
-      }, {
+      },
+      {
         label: '在侧边栏隐藏',
         prop: 'hidden',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '总是显示根路由',
         prop: 'alwaysShow',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '在面包屑显示',
         prop: 'breadcrumb',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '缓存页面',
         prop: 'noCache',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '固定在面包屑最前面',
         prop: 'affix',
         type: 'radio',
@@ -293,7 +331,7 @@ export default class Menu extends Vue {
         display: false
       }
     ]
-  }
+  };
 
   get menuData() {
     return UserModule.menus
@@ -351,22 +389,44 @@ export default class Menu extends Vue {
     location.reload()
   }
 
+  // 合并meta
+  concatMeta(row: any) {
+    const data: any = {
+      meta: {}
+    }
+    Object.keys(row).forEach((key) => {
+      if (this.META_KEY.includes(key)) {
+        data.meta[key] = row[key]
+      } else {
+        if (key === 'pid' && !row[key]) {
+          return
+        }
+        data[key] = row[key]
+      }
+    })
+    return data
+  }
+
   async saveRow(row: any, done: Function, loading: boolean) {
     loading = true
-    const response = await createMenus(row)
-    Message({
-      message: '新增',
-      type: 'success'
-    })
+    const data = this.concatMeta(row)
+    console.log(data)
+    try {
+      const response = await createMenus(data)
+      this.$message.success(response.message)
+    } catch (error) {
+      this.$message.error(error.message)
+    }
     done()
-    location.reload()
+    // location.reload()
   }
 
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     console.log(row)
+    const data = this.concatMeta(row)
     try {
-      const response = await updateMenus(row)
+      const response = await updateMenus(data)
       console.log(response, 'wwww')
       Message({
         message: '更新成功',
@@ -376,12 +436,11 @@ export default class Menu extends Vue {
       Message.error('编辑失败')
     }
     done()
-    location.reload()
+    // location.reload()
   }
 
   async dblclickRow(row: any, column: any) {
-    this.defaultForm.parentId = row.id
-    this.$refs['crud'].rowAdd()
+    this.defaultForm.pid = row.id(this.$refs['crud'] as any).rowAdd()
     console.log(row, column)
   }
 
@@ -396,19 +455,17 @@ export default class Menu extends Vue {
 </script>
 
 <style lang="scss" scope>
-  .icon-from-style {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon-input {
-      margin-right: 50px;
-    }
+.icon-from-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .icon-input {
+    margin-right: 50px;
   }
-  .menu-container {
-    margin: 0 20px;
-    .header {
-
-    }
+}
+.menu-container {
+  margin: 0 20px;
+  .header {
   }
-
+}
 </style>

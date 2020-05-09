@@ -100,7 +100,7 @@ export default class Menu extends Vue {
     roleId: 1,
     menuId: 1
   }
-  private defaultForm = { parentId: 0 } // Crud默认参数
+  private defaultForm = { pid: null } // Crud默认参数
   private data = [] // Crud默认展示数据
   // 菜单树参数
   private menusTreeProp = {
@@ -173,7 +173,7 @@ export default class Menu extends Vue {
     this.isShowDialog = true
     if (row.menus) {
       this.$nextTick(() => {
-        this.$refs.tree.setCheckedNodes(row.menus)
+        (this.$refs.tree as any).setCheckedNodes(row.menus)
       })
     }
     if (row.id) {
@@ -196,8 +196,8 @@ export default class Menu extends Vue {
     }).then(async() => {
       const params = [row.id]
       try {
-        const { msg, data } = await deleteRoles(params)
-        this.$message.success(msg)
+        const { message, data } = await deleteRoles(params)
+        this.$message.success(message)
         this.getRoles()
       } catch {
         this.$message.error('删除失败')
@@ -208,8 +208,8 @@ export default class Menu extends Vue {
   // 保存新增信息
   async saveRow(row: any, done: Function, loading: Function) {
     try {
-      const { msg, data } = await createRoles(row)
-      this.$message.success(msg)
+      const { message, data } = await createRoles(row)
+      this.$message.success(message)
       this.getRoles()
     } catch {
       this.$message.error('保存失败')
@@ -221,8 +221,8 @@ export default class Menu extends Vue {
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     try {
-      const { msg, data } = await updateRoles(row)
-      this.$message.success(msg)
+      const { message, data } = await updateRoles(row)
+      this.$message.success(message)
       this.getRoles()
     } catch (error) {
       this.$message.error('更新失败')
@@ -232,7 +232,7 @@ export default class Menu extends Vue {
 
   // 分配菜单权限
   async assignMenus() {
-    const node = this.$refs.tree.getCheckedNodes()
+    const node = (this.$refs.tree as any).getCheckedNodes()
     if (!node) {
       this.$message.error('分配菜单失败, 你没有选择')
     }
@@ -246,8 +246,8 @@ export default class Menu extends Vue {
     })
 
     try {
-      const { msg, data } = await updateMenuAuthorizations(menuData)
-      this.$message.success(msg)
+      const { message, data } = await updateMenuAuthorizations(menuData)
+      this.$message.success(message)
       location.reload()
     } catch (error) {
       this.$message.error('菜单分配失败')
@@ -256,7 +256,7 @@ export default class Menu extends Vue {
 
   // 双击行
   async dblclickRow(row: any, column: any) {
-    // this.defaultForm.parentId = row.id
+    // this.defaultForm.pid = row.id
     // this.$refs['crud'].rowAdd()
   }
 

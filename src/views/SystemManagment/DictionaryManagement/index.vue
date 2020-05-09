@@ -170,8 +170,8 @@ export default class Menu extends Vue {
     }).then(async() => {
       const params = [row.id]
       try {
-        const { msg, data } = await deleteDicts(params)
-        this.$message.success(msg)
+        const { message, data } = await deleteDicts(params)
+        this.$message.success(message)
         this.getDicts()
       } catch {
         this.$message.success('删除失败')
@@ -192,8 +192,8 @@ export default class Menu extends Vue {
     }).then(async() => {
       const params = this.selectionData.map((item: any) => item.id)
       try {
-        const { msg, data } = await deleteDicts(params)
-        this.$message.success(msg)
+        const { message, data } = await deleteDicts(params)
+        this.$message.success(message)
         this.getDicts()
       } catch {
         this.$message.error('删除失败')
@@ -205,8 +205,8 @@ export default class Menu extends Vue {
   // 保存新增信息
   async saveRow(row: any, done: Function, loading: Function) {
     try {
-      const { msg, data } = await createDicts(row)
-      this.$message.success(msg)
+      const { message, data } = await createDicts(row)
+      this.$message.success(message)
       this.getDicts()
     } catch {
       this.$message.error('保存失败')
@@ -218,8 +218,8 @@ export default class Menu extends Vue {
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     try {
-      const { msg, data } = await updateDicts(row)
-      this.$message.success(msg)
+      const { message, data } = await updateDicts(row)
+      this.$message.success(message)
       this.getDicts()
     } catch (error) {
       this.$message.error('更新失败')
@@ -250,7 +250,7 @@ export default class Menu extends Vue {
   // 获取所有字典类型
   async getDictTypesList() {
     try {
-      const { msg, data } = await getDictTypesList()
+      const { message, data } = await getDictTypesList()
       console.log(this.dictTypesOptions)
       console.log(data, 'getDictTypesList')
       this.dictTypesOptions = data

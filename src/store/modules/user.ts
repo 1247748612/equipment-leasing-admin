@@ -1,13 +1,15 @@
 import router from '@/router'
 import { RouteConfig } from 'vue-router'
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
-import { login, logout, getUserInfo } from '@/api/users'
+import { login, logout, currentUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
-import { joinRoute } from '@/utils/utils'
+import { joinRoute, splitMeta } from '@/utils/utils'
 import { constantRoutes } from '../../router/index'
 import Layout from '@/layout/index.vue'
 
 import store from '@/store'
+import { LoginForm } from '../../interfaces/user.interface'
+import { currentUserMenus } from '../../api/users'
 
 export interface IUserState {
   token: string
@@ -26,8 +28,9 @@ class User extends VuexModule implements IUserState {
   public avatar = ''
   public asyncRoute: RouteConfig[] = []
   public dynamicRoute: RouteConfig[] = []
-  public menus = []
+  public menus: any[] = []
   public roles = []
+  public phoneNumber = ''
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -40,6 +43,11 @@ class User extends VuexModule implements IUserState {
   }
 
   @Mutation
+  private SET_PHONE_NUMBER(phoneNumber: string) {
+    this.phoneNumber = phoneNumber
+  }
+
+  @Mutation
   private SET_AVATAR(avatar: string) {
     this.avatar = avatar
   }
@@ -48,13 +56,15 @@ class User extends VuexModule implements IUserState {
   private SET_ASYNC_ROUTE(menus: any) {
     const newRoute: RouteConfig[] = joinRoute(menus)
     console.log('newRoute', newRoute)
+    // console.log(menus)
     this.dynamicRoute = newRoute
     this.asyncRoute = constantRoutes.concat(newRoute)
   }
 
   @Mutation
   private SET_MENUS(menus: any) {
-    this.menus = menus || []
+    this.menus = splitMeta(menus)
+    console.log(this.menus)
   }
 
   @Mutation
@@ -63,16 +73,16 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
-  public async Login(userInfo: { name: string, password: string }) {
-    let { name, password } = userInfo
-    name = name.trim()
+  public async Login(userInfo: LoginForm) {
     try {
-      const data: any = await login({ name, password })
-      setToken(data.token)
-      this.SET_TOKEN(data.token)
-    } catch {
+      console.log(userInfo)
+      const response = await login(userInfo)
+      setToken(response.data.accessToken)
+      this.SET_TOKEN(response.data.accessToken)
+    } catch (error) {
+      console.log(error)
     }
-    // this.GetUserInfo()
+    // this.currentUserInfo()
   }
 
   @Action
@@ -85,23 +95,33 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
-  public async GetUserInfo() {
+  public async UserInfo() {
     if (this.token === '') {
-      throw Error('GetUserInfo: token is undefined!')
+      throw Error('currentUserInfo: token is undefined!')
     }
-    const data: any = await getUserInfo({ /* Your params here */ })
+    const data = await currentUserInfo({ /* Your params here */ })
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
-    const { nickname, icon, roles } = data.user
-
-    const menus = roles[0].menus
+    console.log(data, 'user, info')
+    const { nickname, phonenumber, avatar, roles } = data.data
+    
     // roles must be a non-empty array
     this.SET_ROLES(roles)
     this.SET_NAME(nickname)
-    this.SET_AVATAR(icon)
-    this.SET_ASYNC_ROUTE(menus)
-    this.SET_MENUS(menus)
+    this.SET_AVATAR(avatar)
+    this.SET_PHONE_NUMBER(phonenumber)
+  }
+  
+  @Action
+  public async UserMenu() {
+    try {
+      const data = await currentUserMenus()
+      this.SET_ASYNC_ROUTE(data.data)
+      this.SET_MENUS(data.data)
+      console.log(data)
+    } catch(error) {
+    }
   }
 
   @Action

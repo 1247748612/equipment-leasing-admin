@@ -25,7 +25,8 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
       if (!UserModule.roles.length) {
         try {
           // Get user info, including roles
-          await UserModule.GetUserInfo()
+          await UserModule.UserInfo()
+          await UserModule.UserMenu()
           await router.addRoutes(UserModule.dynamicRoute)
           // Set the replace: true, so the navigation will not leave a history record
           console.log('tototototo r', to)

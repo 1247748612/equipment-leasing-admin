@@ -1,15 +1,35 @@
 import request from '@/utils/request'
+import { AxiosSuccessData } from '../interfaces/http.interface'
 
-export const getUserInfo = (data: any) =>
+/**
+ * @description 获取用户个人信息
+ * @param {*} data
+ */
+export const currentUserInfo = (data?: any) =>
   request({
-    url: '/admin/user',
+    url: '/user/info',
     method: 'get',
     data
   })
 
+/**
+ * @description 获取个人菜单
+ * @param {*} data
+ */
+export const currentUserMenus = (params?: any) =>
+  request({
+    url: '/user/menu',
+    method: 'get',
+    params
+  })
+
+/**
+ * @description 用户登录
+ * @param {*} data
+ */
 export const login = (data: any) =>
   request({
-    url: '/admin/login',
+    url: '/user/login',
     method: 'post',
     data
   })
@@ -36,7 +56,7 @@ export const createUsers = (data: any) => {
   })
 }
 
-export const updateUsers = (data) => {
+export const updateUsers = (data: any) => {
   return request({
     url: '/users',
     method: 'put',

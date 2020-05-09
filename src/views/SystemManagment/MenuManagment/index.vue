@@ -1,10 +1,10 @@
 <template>
   <div class="menu-container">
-    <h3>{{ $route.meta.title || '默认标题' }}</h3>
+    <h3>菜单管理</h3>
     <avue-crud
       ref="crud"
       v-model="defaultForm"
-      class=""
+      class
       :option="option"
       :data="menuData"
       @row-update="updateRow"
@@ -12,6 +12,16 @@
       @row-save="saveRow"
       @row-dblclick="dblclickRow"
     >
+      <!-- 自定义菜单左 -->
+      <template slot="menuLeft">
+        <el-button
+          type="primary"
+          size="small"
+        >
+          自定义按钮
+        </el-button>
+      </template>
+
       <!-- 自定义图标 -->
       <template
         slot="icon"
@@ -69,12 +79,14 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
-
+import { Message } from 'element-ui'
 @Component({
   name: 'MenuManager'
 })
 export default class Menu extends Vue {
-  // 单选框选项
+  // 新增和修改时的metaKey
+  private META_KEY = ['title', 'icon', 'alwaysShow', 'hidden', 'breadcrumb', 'noCache', 'affix']
+
   radioDicData = [
     {
       label: '否',
@@ -84,13 +96,11 @@ export default class Menu extends Vue {
       label: '是',
       value: 1
     }
-  ]
+  ];
 
-  // CRUD默认参数
-  defaultForm = { parentId: 0 }
+  defaultForm = { pid: null };
 
   option: object = {
-    refreshBtn: false,
     title: '菜单管理',
     translate: false,
     stripe: true,
@@ -107,12 +117,15 @@ export default class Menu extends Vue {
           {
             label: '菜单名',
             prop: 'title',
-            rules: [{
-              required: true,
-              message: '请输入菜单名',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                required: true,
+                message: '请输入菜单名',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '图标',
             prop: 'icon',
             width: 50,
@@ -128,35 +141,45 @@ export default class Menu extends Vue {
           {
             label: '路由名',
             prop: 'name',
-            rules: [{
-              message: '请输入路由名',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                message: '请输入路由名',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '路由路径',
             prop: 'path',
-            rules: [{
-              message: '请正确输入路由路径',
-              trigger: 'blur'
-            }],
+            rules: [
+              {
+                message: '请正确输入路由路径',
+                trigger: 'blur'
+              }
+            ],
             tip: '路径可为外链(要添加http://前缀)'
-          }, {
+          },
+          {
             label: '跳转路由',
             prop: 'redirect',
-            rules: [{
-              // required: true,
-              message: '请正确输入跳转路由路径(noRedirect不跳转)',
-              trigger: 'blur'
-            }]
-          }, {
+            rules: [
+              {
+                // required: true,
+                message: '请正确输入跳转路由路径(noRedirect不跳转)',
+                trigger: 'blur'
+              }
+            ]
+          },
+          {
             label: '组件路径',
             prop: 'componentPath',
-            rules: [{
-              // required: true,
-              message: '请正确输入组件路径',
-              trigger: 'blur'
-            }],
-            tip: '若上级菜单为根菜单,并且还有子菜单请填写为Layout'
+            rules: [
+              {
+                // required: true,
+                message: '请正确输入组件路径',
+                trigger: 'blur'
+              }
+            ]
           }
         ]
       },
@@ -174,7 +197,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 0
-          }, {
+          },
+          {
             label: '总是显示根路由',
             prop: 'alwaysShow',
             type: 'radio',
@@ -183,7 +207,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 0
-          }, {
+          },
+          {
             label: '面包屑显示',
             prop: 'breadcrumb',
             type: 'radio',
@@ -192,7 +217,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 1
-          }, {
+          },
+          {
             label: '缓存页面',
             prop: 'noCache',
             type: 'radio',
@@ -201,7 +227,8 @@ export default class Menu extends Vue {
             span: 5,
             button: true,
             value: 1
-          }, {
+          },
+          {
             label: '固定在面包屑最前面',
             prop: 'affix',
             type: 'radio',
@@ -219,77 +246,84 @@ export default class Menu extends Vue {
       {
         label: '菜单id',
         prop: 'id',
-        hide: true,
         display: false
       },
       {
         label: '上级菜单',
-        prop: 'parentId',
-        hide: true,
+        prop: 'pid',
         type: 'tree',
         dicData: this.parentMenuDicData,
         value: 0
-      }, {
+      },
+      {
         label: '菜单名',
         prop: 'title',
         display: false
-      }, {
+      },
+      {
         label: '图标',
         prop: 'icon',
         width: 50,
         display: false,
         slot: true
-      }, {
+      },
+      {
+        label: '排序',
+        prop: 'sort',
+        width: 50,
+        value: 1
+        // hide: true
+        // slot: true
+      },
+      {
         label: '路由名',
         prop: 'name',
-        hide: true,
         display: false
-
-      }, {
+      },
+      {
         label: '路由路径',
         prop: 'path',
         display: false
-      }, {
+      },
+      {
         label: '跳转路由',
         prop: 'redirect',
-        hide: true,
         display: false
-
-      }, {
-        label: '排序',
-        prop: 'rank',
-        type: 'number',
-        value: 1
-      }, {
+      },
+      {
         label: '组件路径',
         prop: 'componentPath',
         display: false
-
-      }, {
+      },
+      {
         label: '在侧边栏隐藏',
         prop: 'hidden',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '总是显示根路由',
         prop: 'alwaysShow',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '在面包屑显示',
         prop: 'breadcrumb',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '缓存页面',
         prop: 'noCache',
         type: 'radio',
         dicData: this.radioDicData,
         display: false
-      }, {
+      },
+      {
         label: '固定在面包屑最前面',
         prop: 'affix',
         type: 'radio',
@@ -297,9 +331,8 @@ export default class Menu extends Vue {
         display: false
       }
     ]
-  }
+  };
 
-  // 获取用户菜单信息
   get menuData() {
     return UserModule.menus
   }
@@ -324,6 +357,7 @@ export default class Menu extends Vue {
         return []
       }
       menus.forEach((item: any) => {
+        console.log(item)
         itemChildren.push({
           label: item.title,
           value: item.id,
@@ -340,76 +374,98 @@ export default class Menu extends Vue {
     }
   }
 
-  // 处理空数据时的新增按钮执行方法
   handleAdd() {
     const crud: any = this.$refs.crud
     crud.rowAdd()
   }
 
-  // 行删除执行方法
   async deleteRow(row: any, index: number) {
-    this.$confirm(`此操作将会删除${row.title}, 是否继续?`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(async() => {
-      const params = [row.id]
-      try {
-        const { msg, data } = await deleteMenus(params)
-        this.$message.success(msg)
-      } catch {
-        this.$message.error('删除失败')
-      }
-      location.reload()
+    const params = [row.id]
+    const response = await deleteMenus(params)
+    Message({
+      message: '删除成功',
+      type: 'success'
     })
-  }
-
-  // 行更新执行方法
-  async saveRow(row: any, done: Function, loading: Function) {
-    try {
-      const { msg, data } = await createMenus(row)
-      this.$message.success(msg)
-    } catch {
-      this.$message.error('新增失败')
-    }
-    done()
     location.reload()
   }
 
-  // 行更新执行方法
-  async updateRow(row: any, index: number, done: Function, loading: Function) {
-    try {
-      const { msg, data } = await updateMenus(row)
-      this.$message.success(msg)
-      location.reload()
-    } catch {
-      this.$message.error('更新失败')
+  // 合并meta
+  concatMeta(row: any) {
+    const data: any = {
+      meta: {}
     }
-    done()
+    Object.keys(row).forEach((key) => {
+      if (this.META_KEY.includes(key)) {
+        data.meta[key] = row[key]
+      } else {
+        if (key === 'pid' && !row[key]) {
+          return
+        }
+        data[key] = row[key]
+      }
+    })
+    return data
   }
 
-  // 行双击 打开新增页面指定上级菜单为当前双击的行菜单
+  async saveRow(row: any, done: Function, loading: boolean) {
+    loading = true
+    const data = this.concatMeta(row)
+    console.log(data)
+    try {
+      const response = await createMenus(data)
+      this.$message.success(response.message)
+    } catch (error) {
+      this.$message.error(error.message)
+    }
+    done()
+    // location.reload()
+  }
+
+  async updateRow(row: any, index: number, done: Function, loading: boolean) {
+    loading = true
+    console.log(row)
+    const data = this.concatMeta(row)
+    try {
+      const response = await updateMenus(data)
+      console.log(response, 'wwww')
+      Message({
+        message: '更新成功',
+        type: 'success'
+      })
+    } catch {
+      Message.error('编辑失败')
+    }
+    done()
+    // location.reload()
+  }
+
   async dblclickRow(row: any, column: any) {
-    this.defaultForm.parentId = row.id
-    this.$refs['crud'].rowAdd()
+    this.defaultForm.pid = row.id(this.$refs['crud'] as any).rowAdd()
+    console.log(row, column)
+  }
+
+  created() {
+    let index = 0
+    // while (index < 20) {
+    //   index += 1
+    //   this.data.push(this.data[0])
+    // }
   }
 }
 </script>
 
 <style lang="scss" scope>
-  .icon-from-style {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon-input {
-      margin-right: 50px;
-    }
+.icon-from-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .icon-input {
+    margin-right: 50px;
   }
-  .menu-container {
-    margin: 0 20px;
-    .header {
-
-    }
+}
+.menu-container {
+  margin: 0 20px;
+  .header {
   }
-
+}
 </style>

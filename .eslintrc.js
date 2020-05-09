@@ -9,9 +9,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     sourceType: 'module'
   },
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -28,7 +26,7 @@ module.exports = {
     'vue/match-component-file-name': 'error',
     'vue/object-curly-spacing': 'error'
   },
-  'extends': [
+  extends: [
     'eslint:recommended',
     'plugin:vue/recommended',
     '@vue/standard',

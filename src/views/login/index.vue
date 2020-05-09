@@ -20,7 +20,7 @@
         </span>
         <el-input
           ref="name"
-          v-model="loginForm.name"
+          v-model.trim="loginForm.username"
           name="name"
           type="text"
           autocomplete="on"
@@ -35,7 +35,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model.trim="loginForm.password"
           :type="passwordType"
           placeholder="password"
           name="password"
@@ -61,7 +61,7 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span> 账号: admin </span>
+          <span> 账号: super_admin </span>
           <span> 密码: any </span>
         </div>
       </div>
@@ -76,6 +76,7 @@ import { Dictionary } from 'vue-router/types/router'
 import { Form as ElForm, Input } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
 import { isValidname } from '@/utils/validate'
+import { LoginForm } from '../../interfaces/user.interface'
 
 @Component({
   name: 'Login'
@@ -95,8 +96,8 @@ export default class extends Vue {
       callback()
     }
   }
-  private loginForm = {
-    name: 'admin',
+  private loginForm: LoginForm = {
+    username: 'super_admin',
     password: '123456'
   }
   private loginRules = {
@@ -121,7 +122,7 @@ export default class extends Vue {
   }
 
   mounted() {
-    if (this.loginForm.name === '') {
+    if (this.loginForm.username === '') {
       (this.$refs.name as Input).focus()
     } else if (this.loginForm.password === '') {
       (this.$refs.password as Input).focus()
@@ -143,7 +144,8 @@ export default class extends Vue {
     (this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
       if (valid) {
         this.loading = true
-        await UserModule.Login(this.loginForm)
+        const data = this.loginForm
+        await UserModule.Login(data)
         this.$router.push({
           path: this.redirect || '/',
           query: this.otherQuery
