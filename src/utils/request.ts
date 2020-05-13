@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
-import { AxiosResponseData, AxiosSuccessData } from '../interfaces/http.interface';
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -49,11 +48,11 @@ service.interceptors.response.use(
             cancelButtonText: '取消',
             type: 'warning'
           }
-          ).then(() => {
-            UserModule.ResetToken()
-            location.reload() // To prevent bugs from vue-router
-          })
-        } else {
+        ).then(() => {
+          UserModule.ResetToken()
+          location.reload() // To prevent bugs from vue-router
+        })
+      } else {
         Message.error(res.msg)
       }
       return Promise.reject(new Error(res.msg || 'Error'))
@@ -64,13 +63,16 @@ service.interceptors.response.use(
       return res
     }
   },
-  (error) => {
+  ({ response }: { response: AxiosResponse}) => {
+    if (response.status === 401) {
+      UserModule.ResetToken()
+    }
     Message({
-      message: error.message,
+      message: response.data.errMessage,
       type: 'error',
       duration: 5 * 1000
     })
-    return Promise.reject(error)
+    return Promise.reject(response.data)
   }
 )
 

@@ -31,10 +31,9 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import { getLogInfos } from '@/api/logInfos'
 import { getDictTypesOptions } from '@/utils/utils'
-import { updateMenuAuthorizations } from '@/api/menus'
 
 @Component({
-  name: 'MenuManager'
+  name: 'SystemLogManager'
 })
 export default class Menu extends Vue {
   private data = [] // Crud默认展示数据
@@ -44,7 +43,7 @@ export default class Menu extends Vue {
   private page = {
     total: 200,
     pageSize: 10,
-    currentPage: 1,
+    page: 1,
     background: true
   }
 
@@ -92,7 +91,7 @@ export default class Menu extends Vue {
         hide: true
       }, {
         label: '创建日期',
-        prop: 'createdDate',
+        prop: 'createdAt',
         type: 'datetime',
         format: 'yyyy年M月d日 H:m'
       }, {
@@ -116,7 +115,7 @@ export default class Menu extends Vue {
     try {
       const params = {
         rows: (page && page.pageSize) || this.page.pageSize,
-        page: (page && page.currentPage) || this.page.currentPage
+        page: (page && page.page) || this.page.page
       }
       const { data } = await getLogInfos(params)
       this.data = data.records

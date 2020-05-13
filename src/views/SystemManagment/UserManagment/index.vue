@@ -73,9 +73,9 @@
       >
         <el-option
           v-for="item in roleOptions"
-          :key="item.id"
+          :key="item._id"
           :label="item.name"
-          :value="item.id"
+          :value="item._id"
         />
       </el-select>
       <div class="tree-button">
@@ -95,9 +95,9 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
 import { getUsers, deleteUsers, createUsers, updateUsers } from '@/api/users'
-import { getRolesList, updateUserRoles } from '../../../api/roles'
+import { getRolesList, assigningRoles } from '../../../api/roles'
 @Component({
-  name: 'MenuManager'
+  name: 'UserManager'
 })
 export default class Menu extends Vue {
   private isShowDialog = false // 角色分配dialog
@@ -106,15 +106,12 @@ export default class Menu extends Vue {
   private roleOptions = [] // 角色分配选项
   private selectRolesData = [] // 角色分配选中数据
   // 用户角色默认项
-  private userRoles = {
-    userId: 0,
-    roleId: 0
-  }
+  private userId = null
 
   private page = {
     total: 200,
     pageSize: 10,
-    currentPage: 1,
+    page: 1,
     background: true
   }
 
@@ -130,13 +127,13 @@ export default class Menu extends Vue {
     column: [
       {
         label: '用户id',
-        prop: 'id',
+        prop: '_id',
         display: false,
         hide: true
       },
       {
         label: '用户名',
-        prop: 'name',
+        prop: 'username',
         span: 24,
         rules: [{
           required: true,
@@ -164,13 +161,13 @@ export default class Menu extends Vue {
         }]
       }, {
         label: '创建日期',
-        prop: 'createdDate',
+        prop: 'createdAt',
         type: 'datetime',
         display: false,
         format: 'yyyy年M月d日 H:m'
       }, {
         label: '电话号码',
-        prop: 'telephone',
+        prop: 'phoneNumber',
         span: 24,
         rules: [{
           validator: (rule: any, value: any, callback: Function) => {
@@ -185,7 +182,7 @@ export default class Menu extends Vue {
         }]
       }, {
         label: '用户头像',
-        prop: 'icon',
+        prop: 'avatar',
         type: 'upload',
         listType: 'picture-img',
         action: '/upload/img',
@@ -247,23 +244,27 @@ export default class Menu extends Vue {
     if (!this.roleOptions.length) {
       this.getRoles()
     }
-    this.selectRolesData = row.roles.map((item: any) => item.id)
+    console.log(row.roles)
+    this.selectRolesData = row.roles.map((item: any) => item._id)
     this.isShowDialog = true
     if (row.id) {
-      this.userRoles.userId = row.id
+      this.userId = row._id
     }
   }
 
   // 删除行
   deleteRow(row: any, index: number) {
-    this.$confirm(`此操作将会删除${row.name}, 是否继续?`, '提示', {
+    this.$confirm(`此操作将会删除${row.nickname}, 是否继续?`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     }).then(async() => {
-      const params = [row.id]
+      const apiData: any = {
+        userIds: []
+      }
+      apiData.userIds.push(row._id)
       try {
-        const { message, data } = await deleteUsers(params)
+        const { message, data } = await deleteUsers(apiData)
         this.$message.success(message)
         this.getUsers()
       } catch {
@@ -294,7 +295,7 @@ export default class Menu extends Vue {
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     try {
-      const { code, message, data } = await updateUsers(row)
+      const { code, message, data } = await updateUsers(row._id, row)
       this.$message.success(message)
       if (code === 203) {
         location.reload()
@@ -309,13 +310,14 @@ export default class Menu extends Vue {
 
   // 角色分配
   assignRoles() {
-    const submitData = this.selectRolesData.map((item) => {
-      return {
-        ...this.userRoles,
-        roleId: item
-      }
+    const assignData = {
+      userId: this.userId,
+      roleIds: []
+    }
+    this.selectRolesData.forEach((id) => {
+      assignData.roleIds.push(id)
     })
-    updateUserRoles(submitData).then(({ message, data }) => {
+    assigningRoles(assignData).then(({ message, data }) => {
       this.$message.success(message)
       this.isShowDialog = false
       this.getUsers()
@@ -331,14 +333,15 @@ export default class Menu extends Vue {
 
   // 获取所有用户
   async getUsers(page?: any) {
+    console.log(page)
     try {
       const params = {
-        rows: (page && page.pageSize) || this.page.pageSize,
-        page: (page && page.currentPage) || this.page.currentPage
+        limit: (page && page.pageSize) || this.page.pageSize,
+        page: (page && page.currentPage) || this.page.page
       }
       const { message, data } = await getUsers(params)
-      this.data = data.records
-      this.page.total = data.total
+      this.data = data.data
+      this.page.total = data.pagination.total
       console.log(data, this.page, 'getUsers')
     } catch (error) {
       this.$message.error('获取用户数据失败')

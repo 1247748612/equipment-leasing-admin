@@ -57,6 +57,24 @@
         </div>
       </template>
 
+      自定义类型From
+      <template
+        slot="componentPathForm"
+        slot-scope="scope"
+      >
+        <el-select
+          v-model="scope.row.componentPath"
+          placeholder="请选择路径"
+        >
+          <el-option
+            v-for="(path, name, index) in componentPathOption"
+            :key="index"
+            :label="name"
+            :value="path"
+          />
+        </el-select>
+      </template>
+
       <template slot="empty">
         <avue-empty
           image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
@@ -80,6 +98,8 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
 import { Message } from 'element-ui'
+import { componentPathOption } from '../../../utils/utils'
+
 @Component({
   name: 'MenuManager'
 })
@@ -173,13 +193,9 @@ export default class Menu extends Vue {
           {
             label: '组件路径',
             prop: 'componentPath',
-            rules: [
-              {
-                // required: true,
-                message: '请正确输入组件路径',
-                trigger: 'blur'
-              }
-            ]
+            formslot: true,
+            value: '/Default.vue',
+            tip: '如果您有添加子菜单的打算请选择为Layout组件'
           }
         ]
       },
@@ -245,15 +261,17 @@ export default class Menu extends Vue {
     column: [
       {
         label: '菜单id',
-        prop: 'id',
-        display: false
+        prop: '_id',
+        display: false,
+        hide: true
       },
       {
         label: '上级菜单',
         prop: 'pid',
         type: 'tree',
         dicData: this.parentMenuDicData,
-        value: 0
+        value: 0,
+        hide: true
       },
       {
         label: '菜单名',
@@ -276,6 +294,27 @@ export default class Menu extends Vue {
         // slot: true
       },
       {
+        label: '类型',
+        prop: 'type',
+        type: 'radio',
+        default: 0,
+        dicData: [
+          {
+            label: '菜单',
+            value: 0
+          },
+          {
+            label: '按钮',
+            value: 1
+          }
+        ]
+      },
+      {
+        label: '权限标识符',
+        prop: 'permissionIdentifier'
+        // hide: true
+      },
+      {
         label: '路由名',
         prop: 'name',
         display: false
@@ -293,7 +332,8 @@ export default class Menu extends Vue {
       {
         label: '组件路径',
         prop: 'componentPath',
-        display: false
+        display: false,
+        formslot: true
       },
       {
         label: '在侧边栏隐藏',
@@ -334,7 +374,15 @@ export default class Menu extends Vue {
   };
 
   get menuData() {
+    const crud: any = this.$refs.crud
+    if (crud) {
+      crud.init()
+    }
     return UserModule.menus
+  }
+
+  get componentPathOption() {
+    return componentPathOption()
   }
 
   // 获取上级菜单选项
@@ -357,17 +405,16 @@ export default class Menu extends Vue {
         return []
       }
       menus.forEach((item: any) => {
-        console.log(item)
         itemChildren.push({
           label: item.title,
-          value: item.id,
+          value: item._id,
           children: this.getParentTreeDicData(item.children || {})
         })
       })
       return itemChildren
     } else if (menus.title) {
       item.label = menus.title
-      item.value = menus.id
+      item.value = menus._id
       return item
     } else {
       return []
@@ -380,13 +427,16 @@ export default class Menu extends Vue {
   }
 
   async deleteRow(row: any, index: number) {
-    const params = [row.id]
-    const response = await deleteMenus(params)
-    Message({
-      message: '删除成功',
-      type: 'success'
-    })
-    location.reload()
+    const data = {
+      menuIds: [row._id]
+    }
+    try {
+      const response = await deleteMenus(data)
+      this.$message.success(response.message)
+      UserModule.UserMenu()
+    } catch (error) {
+      // this.$message.error(error.errMessage)
+    }
   }
 
   // 合并meta
@@ -414,6 +464,7 @@ export default class Menu extends Vue {
     try {
       const response = await createMenus(data)
       this.$message.success(response.message)
+      UserModule.UserMenu()
     } catch (error) {
       this.$message.error(error.message)
     }
@@ -423,24 +474,21 @@ export default class Menu extends Vue {
 
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
-    console.log(row)
     const data = this.concatMeta(row)
     try {
-      const response = await updateMenus(data)
-      console.log(response, 'wwww')
-      Message({
-        message: '更新成功',
-        type: 'success'
-      })
+      const response = await updateMenus(row._id, data)
+      console.log(response.data, 'wwww')
+      this.$message.success(response.message)
+      UserModule.UserMenu()
     } catch {
       Message.error('编辑失败')
     }
     done()
-    // location.reload()
   }
 
   async dblclickRow(row: any, column: any) {
-    this.defaultForm.pid = row.id(this.$refs['crud'] as any).rowAdd()
+    this.defaultForm.pid = row._id;
+    (this.$refs['crud'] as any).rowAdd()
     console.log(row, column)
   }
 

@@ -86,31 +86,31 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
-import { getRoles, deleteRoles, createRoles, updateUserRoles, updateRoles } from '@/api/roles'
-import { updateMenuAuthorizations } from '@/api/menus'
+import { getRoles, deleteRoles, createRoles, assigningRoles, updateRoles, assigningMenus } from '@/api/roles'
 import { ReturnResponseData } from '../../../api/types'
 
 @Component({
-  name: 'MenuManager'
+  name: 'RoleManager'
 })
 export default class Menu extends Vue {
   private isShowDialog = false // dialog 展示用
   // 角色菜单默认项
-  private roleMenus = {
-    roleId: 1,
-    menuId: 1
-  }
+  private roleId = 1
+
   private defaultForm = { pid: null } // Crud默认参数
   private data = [] // Crud默认展示数据
   // 菜单树参数
   private menusTreeProp = {
-    label: 'title'
+    label: (data: any, node: any) => {
+      return data.title || data.meta.title
+      // console.log(data, node, 'props')
+    }
   }
 
   private page = {
-    total: 200,
+    total: 0,
     pageSize: 10,
-    currentPage: 1,
+    page: 1,
     background: true
   }
 
@@ -143,7 +143,7 @@ export default class Menu extends Vue {
         span: 24
       }, {
         label: '创建日期',
-        prop: 'createdDate',
+        prop: 'createdAt',
         type: 'datetime',
         display: false,
         format: 'yyyy年M月d日 H:m'
@@ -176,8 +176,8 @@ export default class Menu extends Vue {
         (this.$refs.tree as any).setCheckedNodes(row.menus)
       })
     }
-    if (row.id) {
-      this.roleMenus.roleId = row.id
+    if (row._id) {
+      this.roleId = row._id
     }
   }
 
@@ -194,9 +194,12 @@ export default class Menu extends Vue {
       cancelButtonText: '取消',
       type: 'warning'
     }).then(async() => {
-      const params = [row.id]
+      const apiData: any = {
+        roleIds: []
+      }
+      apiData.roleIds.push(row._id)
       try {
-        const { message, data } = await deleteRoles(params)
+        const { message, data } = await deleteRoles(apiData)
         this.$message.success(message)
         this.getRoles()
       } catch {
@@ -221,7 +224,7 @@ export default class Menu extends Vue {
   async updateRow(row: any, index: number, done: Function, loading: boolean) {
     loading = true
     try {
-      const { message, data } = await updateRoles(row)
+      const { message, data } = await updateRoles(row._id, row)
       this.$message.success(message)
       this.getRoles()
     } catch (error) {
@@ -232,21 +235,21 @@ export default class Menu extends Vue {
 
   // 分配菜单权限
   async assignMenus() {
-    const node = (this.$refs.tree as any).getCheckedNodes()
+    const node = (this.$refs.tree as any).getCheckedNodes(false, true)
     if (!node) {
       this.$message.error('分配菜单失败, 你没有选择')
     }
-
-    const menuData: any = []
+    console.log(node)
+    const menuData: any = {
+      roleId: this.roleId,
+      menuIds: []
+    }
     node.forEach((item: any) => {
-      menuData.push({
-        ...this.roleMenus,
-        menuId: item.id
-      })
+      menuData.menuIds.push(item._id)
     })
 
     try {
-      const { message, data } = await updateMenuAuthorizations(menuData)
+      const { message, data } = await assigningMenus(menuData)
       this.$message.success(message)
       location.reload()
     } catch (error) {
@@ -264,12 +267,12 @@ export default class Menu extends Vue {
   async getRoles(page?: any) {
     try {
       const params = {
-        rows: (page && page.pageSize) || this.page.pageSize,
-        page: (page && page.currentPage) || this.page.currentPage
+        limit: (page && page.pageSize) || this.page.pageSize,
+        page: (page && page.currentPage) || this.page.page
       }
       const { data } = await getRoles(params)
-      this.data = data.records
-      this.page.total = data.total
+      this.data = data.data
+      this.page.total = data.pagination.total
     } catch (error) {
       this.$message.error('获取角色数据失败')
       console.log(error, '错误')

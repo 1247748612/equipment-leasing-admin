@@ -1,4 +1,4 @@
-import router from '@/router'
+import router, { resetRouter } from '@/router'
 import { RouteConfig } from 'vue-router'
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
 import { login, logout, currentUserInfo } from '@/api/users'
@@ -10,6 +10,7 @@ import Layout from '@/layout/index.vue'
 import store from '@/store'
 import { LoginForm } from '../../interfaces/user.interface'
 import { currentUserMenus } from '../../api/users'
+import NotFound from '@/views/404.vue'
 
 export interface IUserState {
   token: string
@@ -58,13 +59,22 @@ class User extends VuexModule implements IUserState {
     console.log('newRoute', newRoute)
     // console.log(menus)
     this.dynamicRoute = newRoute
+    this.dynamicRoute.push(
+      {
+        path: '*',
+        component: NotFound,
+        meta: {
+          hidden: true
+        }
+      }
+    )
     this.asyncRoute = constantRoutes.concat(newRoute)
   }
 
   @Mutation
   private SET_MENUS(menus: any) {
     this.menus = splitMeta(menus)
-    console.log(this.menus)
+    console.log(this.menus, 'splitMeta')
   }
 
   @Mutation
@@ -105,22 +115,24 @@ class User extends VuexModule implements IUserState {
     }
     console.log(data, 'user, info')
     const { nickname, phonenumber, avatar, roles } = data.data
-    
+
     // roles must be a non-empty array
     this.SET_ROLES(roles)
     this.SET_NAME(nickname)
     this.SET_AVATAR(avatar)
     this.SET_PHONE_NUMBER(phonenumber)
   }
-  
+
   @Action
   public async UserMenu() {
     try {
+      resetRouter()
       const data = await currentUserMenus()
-      this.SET_ASYNC_ROUTE(data.data)
-      this.SET_MENUS(data.data)
+      this.SET_ASYNC_ROUTE(JSON.parse(JSON.stringify(data.data)))
+      this.SET_MENUS(JSON.parse(JSON.stringify(data.data)))
       console.log(data)
-    } catch(error) {
+    } catch (error) {
+      console.log(error)
     }
   }
 

@@ -7,7 +7,7 @@ import { AxiosSuccessData } from '../interfaces/http.interface'
  */
 export const currentUserInfo = (data?: any) =>
   request({
-    url: '/user/info',
+    url: '/users/info',
     method: 'get',
     data
   })
@@ -18,7 +18,7 @@ export const currentUserInfo = (data?: any) =>
  */
 export const currentUserMenus = (params?: any) =>
   request({
-    url: '/user/menu',
+    url: '/users/menu',
     method: 'get',
     params
   })
@@ -29,7 +29,7 @@ export const currentUserMenus = (params?: any) =>
  */
 export const login = (data: any) =>
   request({
-    url: '/user/login',
+    url: '/users/login',
     method: 'post',
     data
   })
@@ -56,9 +56,9 @@ export const createUsers = (data: any) => {
   })
 }
 
-export const updateUsers = (data: any) => {
+export const updateUsers = (id: any, data: any) => {
   return request({
-    url: '/users',
+    url: `/users/${id}`,
     method: 'put',
     data
   })

@@ -81,7 +81,7 @@ import { UserModule } from '@/store/modules/user'
 import { deleteMenus, updateMenus, createMenus } from '@/api/menus'
 import { Message } from 'element-ui'
 @Component({
-  name: 'MenuManager'
+  name: 'MenuTest'
 })
 export default class Menu extends Vue {
   // 新增和修改时的metaKey
@@ -380,8 +380,10 @@ export default class Menu extends Vue {
   }
 
   async deleteRow(row: any, index: number) {
-    const params = [row.id]
-    const response = await deleteMenus(params)
+    const data = {
+      menuIds: [row.id]
+    }
+    const response = await deleteMenus(data)
     Message({
       message: '删除成功',
       type: 'success'

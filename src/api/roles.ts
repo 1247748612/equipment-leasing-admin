@@ -12,15 +12,15 @@ export const createRoles = (data: any) => request({
   data
 })
 
-export const updateRoles = (data: any) => request({
-  url: '/roles',
+export const updateRoles = (id: any, data: any) => request({
+  url: `/roles/${id}`,
   method: 'put',
   data
 })
 
 export const getRolesById = (id: any) => request({
   url: `/roles/${id}`,
-  method: 'get',
+  method: 'get'
 })
 
 export const deleteRoles = (data: any) => request({
@@ -29,13 +29,20 @@ export const deleteRoles = (data: any) => request({
   data
 })
 
-export const updateUserRoles = (data: any) => request({
-  url: '/userRoles',
-  method: 'put',
+export const assigningRoles = (data: any) => request({
+  url: '/roles/assigningRoles',
+  method: 'patch',
   data
 })
 
+export const assigningMenus = (data: any) =>
+  request({
+    url: '/roles/assigningMenus',
+    method: 'patch',
+    data
+  })
+
 export const getRolesList = () => request({
-  url: '/roles/listAll',
-  method: 'get',
+  url: '/roles/list',
+  method: 'get'
 })

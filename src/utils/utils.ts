@@ -3,7 +3,7 @@ import { RouteConfig } from 'vue-router'
 import { getDictTypesList } from '@/api/dicts'
 
 export function splitMeta(menus: any[]) {
-  if (menus && !menus.length || !menus) {
+  if ((menus && !menus.length) || !menus) {
     return []
   }
   const result = []
@@ -30,12 +30,20 @@ function recursiveChildrenRoute(menu: any) : RouteConfig | any {
   // 递归路由
   const childrenRoute = joinRoute(menu.children)
 
-  // const componentPath = menu.componentPath || '@/views/Default.vue'
-  const componentPath = '@/views/Default.vue'
-  menu['component'] = () => import(`@/views/${componentPath.replace('@/views/', '')}`)
-  menu.path = '/' + menu.path + String(menu.id)
-  menu.name = menu.name + String(menu.id)
-  menu.meta.hidden = !menu.meta.hidden
+  const componentPath = menu.componentPath || '@/views/Default.vue'
+  if (componentPath.indexOf('layout/index.vue') !== -1) {
+    menu['component'] = Layout
+  } else {
+    menu['component'] = () => import(`@/views${componentPath}`)
+  }
+
+  // 设置重定向
+  if (menu.children.length && menu.children[0].type === 0) {
+    console.log(menu, '设置重定向')
+    menu.redirect = `${menu.path}${menu.children[0].path.startsWith('/') ? '' : '/'}${menu.children[0].path}`
+  }
+  // menu.redirect = menu.redirect === 'noRedirect' ? null : menu.redirect
+
   if (childrenRoute.length > 0) {
     menu.children = childrenRoute
   } else {
@@ -53,7 +61,7 @@ export function joinRoute(menus: any) {
   const asyncRoute: RouteConfig[] = []
   menus.forEach((item: any) => {
     const routeItem: RouteConfig = recursiveChildrenRoute(item)
-    if (routeItem) {
+    if (routeItem && (routeItem as any).type === 0) {
       asyncRoute.push(routeItem)
     }
   })
@@ -76,4 +84,21 @@ export async function getDictTypesOptions() {
     console.log('error', '错误')
     return []
   }
+}
+
+export function componentPathOption() {
+  const whiteNameList = ['Login', 'Page404']
+  const context = require.context('@/views', true, /.vue$/)
+  let options: any = {
+    Layout: '@/layout/index.vue'
+  }
+  context.keys().forEach((key: any) => {
+    const name = context(key).default.options.name
+    if (!whiteNameList.includes(name)) {
+      options[name] = key.substring(1)
+      // options[name] = '@/views' + key.substring(1)
+    }
+  })
+  console.log(options, 'opions')
+  return options
 }

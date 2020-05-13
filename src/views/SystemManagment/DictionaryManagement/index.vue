@@ -77,10 +77,9 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
 import { deleteDicts, createDicts, updateDicts, getDicts, getDictTypesList } from '@/api/dicts'
-import { updateMenuAuthorizations } from '@/api/menus'
 
 @Component({
-  name: 'MenuManager'
+  name: 'DictionaryManager'
 })
 export default class Menu extends Vue {
   private data = [] // Crud默认展示数据
@@ -91,7 +90,7 @@ export default class Menu extends Vue {
   private page = {
     total: 200,
     pageSize: 10,
-    currentPage: 1,
+    page: 1,
     background: true
   }
 
@@ -236,7 +235,7 @@ export default class Menu extends Vue {
     try {
       const params = {
         rows: (page && page.pageSize) || this.page.pageSize,
-        page: (page && page.currentPage) || this.page.currentPage
+        page: (page && page.page) || this.page.page
       }
       const { data } = await getDicts(params)
       this.data = data.records
