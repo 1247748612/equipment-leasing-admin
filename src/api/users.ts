@@ -71,3 +71,11 @@ export const deleteUsers = (data: any) => {
     data
   })
 }
+
+export const change = (data: any) => {
+  return request({
+    url: '/users',
+    method: 'delete',
+    data
+  })
+}
