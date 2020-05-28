@@ -32,6 +32,11 @@ class User extends VuexModule implements IUserState {
   public menus: any[] = []
   public roles = []
   public phoneNumber = ''
+  public userInfo: any = {}
+
+  get permission() {
+    return (this.userInfo && this.userInfo.permissionIdentifierList) || []
+  }
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -59,15 +64,17 @@ class User extends VuexModule implements IUserState {
     console.log('newRoute', newRoute)
     // console.log(menus)
     this.dynamicRoute = newRoute
-    this.dynamicRoute.push(
-      {
-        path: '*',
-        component: NotFound,
-        meta: {
-          hidden: true
+    if (menus.length) {
+      this.dynamicRoute.push(
+        {
+          path: '*',
+          component: NotFound,
+          meta: {
+            hidden: true
+          }
         }
-      }
-    )
+      )
+    }
     this.asyncRoute = constantRoutes.concat(newRoute)
   }
 
@@ -80,6 +87,11 @@ class User extends VuexModule implements IUserState {
   @Mutation
   private SET_ROLES(roles: any) {
     this.roles = roles || []
+  }
+
+  @Mutation
+  SET_USER_INFO(data: any) {
+    this.userInfo = data
   }
 
   @Action
@@ -114,13 +126,14 @@ class User extends VuexModule implements IUserState {
       throw Error('Verification failed, please Login again.')
     }
     console.log(data, 'user, info')
-    const { nickname, phonenumber, avatar, roles } = data.data
+    const { nickname, phoneNumber, avatar, roles } = data.data
 
     // roles must be a non-empty array
     this.SET_ROLES(roles)
     this.SET_NAME(nickname)
     this.SET_AVATAR(avatar)
-    this.SET_PHONE_NUMBER(phonenumber)
+    this.SET_PHONE_NUMBER(phoneNumber)
+    this.SET_USER_INFO(data.data)
   }
 
   @Action
@@ -130,6 +143,7 @@ class User extends VuexModule implements IUserState {
       const data = await currentUserMenus()
       this.SET_ASYNC_ROUTE(JSON.parse(JSON.stringify(data.data)))
       this.SET_MENUS(JSON.parse(JSON.stringify(data.data)))
+      await router.addRoutes(this.dynamicRoute)
       console.log(data)
     } catch (error) {
       console.log(error)

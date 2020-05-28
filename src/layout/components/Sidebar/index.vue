@@ -7,6 +7,7 @@
       :active-text-color="variables.menuActiveText"
       :unique-opened="false"
       :collapse-transition="false"
+      :default-active="$route.path"
       mode="vertical"
     >
       <sidebar-item

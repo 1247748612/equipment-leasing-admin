@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
+import router from '../router/index'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -66,6 +67,7 @@ service.interceptors.response.use(
   ({ response }: { response: AxiosResponse}) => {
     if (response.status === 401) {
       UserModule.ResetToken()
+      router.replace(`/login?redirect=${router.currentRoute.path}`)
     }
     Message({
       message: response.data.errMessage,

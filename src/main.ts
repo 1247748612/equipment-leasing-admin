@@ -3,11 +3,9 @@ import Vue from 'vue'
 import 'normalize.css'
 import ElementUI from 'element-ui'
 import SvgIcon from 'vue-svgicon'
-import Avue from '@smallwei/avue'
-
-import '@smallwei/avue/lib/index.css'
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
+import 'element-ui/lib/theme-chalk/index.css'
 
 import App from '@/App.vue'
 import store from '@/store'
@@ -15,8 +13,8 @@ import router from '@/router'
 import axios from 'axios'
 import '@/icons/components'
 import '@/permission'
+import './plugins/index'
 
-Vue.use(Avue);
 Vue.use(ElementUI)
 Vue.use(SvgIcon, {
   tagName: 'svg-icon',
@@ -25,11 +23,6 @@ Vue.use(SvgIcon, {
 })
 
 Vue.config.productionTip = false
-
-Vue.prototype.$httpajax = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API
-})
-
 
 new Vue({
   router,

@@ -69,13 +69,22 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/previewArticle/:id',
+    name: 'previewArticle',
+    component: () => import('@/views/PreviewArticle/index.vue'),
+    props: true,
+    meta: {
+      hidden: true
+    }
+  },
+  {
     path: '/menussss',
     component: Layout,
     redirect: '/menussss/settingss',
     children: [
       {
         path: 'settingss',
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/SystemManagment/MenuManagment/index.vue'),
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/SystemManagment/menu/index.vue'),
         name: 'menusssss',
         meta: {
           title: '菜单设置',

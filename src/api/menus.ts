@@ -1,22 +1,22 @@
 import request from '@/utils/request'
 
-export const deleteMenus = (data: any) =>
+export const deleteMenu = (data: any) =>
   request({
-    url: '/menus',
+    url: '/menu',
     method: 'delete',
     data
   })
 
-export const createMenus = (data: any) =>
+export const createMenu = (data: any) =>
   request({
-    url: '/menus',
+    url: '/menu',
     method: 'post',
     data
   })
 
-export const updateMenus = (id: any, data: any) =>
+export const updateMenu = (id: any, data: any) =>
   request({
-    url: `/menus/${id}`,
+    url: `/menu/${id}`,
     method: 'put',
     data
   })

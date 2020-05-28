@@ -27,7 +27,6 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           try {
             await UserModule.UserInfo()
             await UserModule.UserMenu()
-            await router.addRoutes(UserModule.dynamicRoute)
             // Set the replace: true, so the navigation will not leave a history record
           } catch (error) {
             console.log(error)

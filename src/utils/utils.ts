@@ -1,6 +1,5 @@
 import Layout from '@/layout/index.vue'
 import { RouteConfig } from 'vue-router'
-import { getDictTypesList } from '@/api/dicts'
 
 export function splitMeta(menus: any[]) {
   if ((menus && !menus.length) || !menus) {
@@ -12,7 +11,7 @@ export function splitMeta(menus: any[]) {
     const menuItem = {
       ...menu,
       ...menu.meta,
-      children
+      children: children.length ? children : null
     }
     Reflect.deleteProperty(menuItem, 'meta')
     result.push(menuItem)
@@ -68,37 +67,24 @@ export function joinRoute(menus: any) {
   return asyncRoute
 }
 
-// 获取所有字典类型
-export async function getDictTypesOptions() {
-  try {
-    const { message, data } = await getDictTypesList()
-    const a = data.map((item: any) => {
-      return {
-        label: item.typeName,
-        value: item.id
-      }
-    })
-    console.log(a)
-    return a
-  } catch (error) {
-    console.log('error', '错误')
-    return []
-  }
-}
-
 export function componentPathOption() {
   const whiteNameList = ['Login', 'Page404']
-  const context = require.context('@/views', true, /.vue$/)
-  let options: any = {
-    Layout: '@/layout/index.vue'
-  }
+  const context: any = require.context('@/views', true, /.vue$/)
+  let options: any = [
+    {
+      label: 'Layout',
+      value: '@/layout/index.vue'
+    }
+  ]
   context.keys().forEach((key: any) => {
-    const name = context(key).default.options.name
+    const contextValue: any = context(key).default
+    const name = contextValue && contextValue.options && contextValue.options.name
     if (!whiteNameList.includes(name)) {
-      options[name] = key.substring(1)
-      // options[name] = '@/views' + key.substring(1)
+      options.push({
+        label: name,
+        value: key.substring(1)
+      })
     }
   })
-  console.log(options, 'opions')
   return options
 }

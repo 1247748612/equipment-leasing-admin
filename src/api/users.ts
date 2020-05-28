@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { AxiosSuccessData } from '../interfaces/http.interface'
 
 /**
  * @description 获取用户个人信息
@@ -7,8 +6,8 @@ import { AxiosSuccessData } from '../interfaces/http.interface'
  */
 export const currentUserInfo = (data?: any) =>
   request({
-    url: '/users/info',
-    method: 'get',
+    url: '/user/info',
+    method: 'post',
     data
   })
 
@@ -18,7 +17,7 @@ export const currentUserInfo = (data?: any) =>
  */
 export const currentUserMenus = (params?: any) =>
   request({
-    url: '/users/menu',
+    url: '/user/menu',
     method: 'get',
     params
   })
@@ -29,53 +28,61 @@ export const currentUserMenus = (params?: any) =>
  */
 export const login = (data: any) =>
   request({
-    url: '/users/login',
+    url: '/user/login',
     method: 'post',
     data
   })
 
 export const logout = () =>
   request({
-    url: '/admin/logout',
+    url: '/user/logout',
     method: 'post'
   })
 
-export const getUsers = (params: any) => {
+export const userPagination = (params: any) => {
   return request({
-    url: '/users',
+    url: '/user/pagination',
     method: 'get',
     params
   })
 }
 
-export const createUsers = (data: any) => {
+export const createUser = (data: any) => {
   return request({
-    url: '/users',
+    url: '/user',
     method: 'post',
     data
   })
 }
 
-export const updateUsers = (id: any, data: any) => {
+export const updateUser = (id: any, data: any) => {
   return request({
-    url: `/users/${id}`,
+    url: `/user/${id}`,
     method: 'put',
     data
   })
 }
 
-export const deleteUsers = (data: any) => {
+export const deleteUser = (data: any) => {
   return request({
-    url: '/users',
+    url: '/user',
     method: 'delete',
     data
   })
 }
 
-export const change = (data: any) => {
+export const onlineUser = (params?: any) => {
   return request({
-    url: '/users',
-    method: 'delete',
+    url: '/user/online',
+    method: 'get',
+    params
+  })
+}
+
+export const outOnlineUser = (data?: any) => {
+  return request({
+    url: '/user/out',
+    method: 'post',
     data
   })
 }

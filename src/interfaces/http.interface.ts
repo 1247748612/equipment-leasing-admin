@@ -1,22 +1,10 @@
-enum ResponseState {
-  Success = 'success',
-  Error = 'error'
-}
-export interface AxiosSuccessData {
-  state: string;
-  message: string;
-  data: {
+interface AxiosCustomResponse {
+  state: string,
+  data?: { // 接口返回数据
     [key: string]: any
-  };
-  code?: number
+  },
+  errMessage?: string // 错误消息
+  message?: string // 消息
+  error?: string // 错误提示
+  stack?: string // 错误
 }
-
-export interface AxiosErrorData {
-  state: string;
-  errMessage: string;
-  error?: string;
-  debug?: any
-  code?: number
-}
-
-export type AxiosResponseData = AxiosSuccessData & AxiosErrorData

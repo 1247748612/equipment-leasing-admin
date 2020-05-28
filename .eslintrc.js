@@ -7,7 +7,8 @@ module.exports = {
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    sourceType: 'module'
+    sourceType: 'module',
+    jsx: true
   },
   plugins: ['vue'],
   rules: {
