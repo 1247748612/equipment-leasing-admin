@@ -15,5 +15,5 @@ declare module 'axios' {
     stack?: string // 错误
   }
 
-  interface AxiosResponse extends AxiosCustomResponse
+  interface AxiosResponse extends AxiosCustomResponse {}
 }

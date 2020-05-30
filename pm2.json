@@ -1,0 +1,11 @@
+{
+  "name": "equipment-leasing",
+  "script": "dist/apps/",
+  "instances": "2",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "env_production" : {
+    "NODE_ENV": "production"
+  }
+}
