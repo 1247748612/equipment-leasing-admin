@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 const name = 'Equipment Lasing Admin'
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/', // TODO: Remember to change this to fit your need
+  publicPath: process.env.NODE_ENV === 'production' ? '/admin' : '/', // TODO: Remember to change this to fit your need
   lintOnSave: process.env.NODE_ENV === 'development',
   pwa: {
     name: name
