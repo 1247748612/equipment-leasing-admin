@@ -1,8 +1,0 @@
-FROM vuejs/ci as admin
-WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install
-COPY . .
-RUN yarn build
-# FROM nginx
-# COPY --from=admin /app/dist /usr/share/nginx/html

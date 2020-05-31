@@ -94,14 +94,16 @@ import { Component, Vue, Prop, Provide, Watch } from 'vue-property-decorator'
 import { ColumnOptions, TableColumns, TableOptions, FormStatus } from '@/components/Crud/interfaces/table.interface'
 import { ROW_DEL_NAME, ROW_EDIT_NAME } from './constatns/text.constant'
 import { EventMixin } from './mixins/event'
-import * as TypeComponents from './TypeComponents/index'
-import * as CrudActions from './components/index'
+import CrudTopActions from './components/TopActions.vue'
+import CrudPagination from './components/pagination.vue'
+import CrudGenerateTable from './components/generate-table'
 import { CrudDialog, CrudForm } from './index'
 @Component({
   name: 'CrudTable',
   components: {
-    ...TypeComponents.default,
-    ...CrudActions.default,
+    CrudPagination,
+    CrudTopActions,
+    CrudGenerateTable,
     CrudDialog,
     CrudForm
   }

@@ -1,13 +1,13 @@
 import { Component, Vue, Prop, Inject, Watch } from 'vue-property-decorator'
 import { ColumnOptions, TableColumns, MenuColumn } from '@/components/Crud/interfaces/table.interface'
-import * as TypeComponents from '../TypeComponents'
+import TypeComponents from '../TypeComponents/index'
 import * as TEXT from '../constatns/text.constant'
 import lodash from 'lodash'
 
 @Component({
   name: 'CrudGenerateTable',
   components: {
-    ...TypeComponents.default
+    ...(TypeComponents())
   }
 })
 export default class CrudGenerateTable extends Vue {
