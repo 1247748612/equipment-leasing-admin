@@ -75,14 +75,13 @@
 import { Component, Vue, Prop, Watch, Emit, Provide, Inject, InjectReactive, Model } from 'vue-property-decorator'
 import { ColumnOptions, TableColumns, FormStatus } from '@/components/Crud/interfaces/table.interface'
 import { ElForm } from 'element-ui/types/form'
-import * as TypeComponent from './TypeComponents/index'
 import * as TEXT from './constatns/text.constant'
 import lodash from 'lodash'
-
+import TypeComponents from './TypeComponents/index'
 @Component({
   name: 'CrudForm',
   components: {
-    ...TypeComponent.default
+    ...(TypeComponents())
   }
 })
 export default class CrudForm extends Vue {
