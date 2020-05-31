@@ -1,10 +1,9 @@
 const path = require('path')
-const TerserPlugin = require('terser-webpack-plugin')
 
 const name = 'Equipment Lasing Admin'
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/admin' : '/', // TODO: Remember to change this to fit your need
+  publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/admin/', // TODO: Remember to change this to fit your need
   lintOnSave: process.env.NODE_ENV === 'development',
   pwa: {
     name: name
@@ -30,22 +29,6 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    if (process.env.NODE_ENV === 'production') {
-      // 返回一个将会被合并的对象
-      return {
-        optimization: {
-          minimizer: [
-            new TerserPlugin({
-              sourceMap: false,
-              terserOptions: {
-                compress: { drop_console: true
-                }
-              }
-            })
-          ]
-        }
-      }
-    }
     // Provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     config.set('name', name)
