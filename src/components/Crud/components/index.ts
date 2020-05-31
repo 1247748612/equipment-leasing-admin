@@ -1,5 +1,5 @@
 export default function findComponent() {
-  const files = require.context('.', false, /\.vue$/)
+  const files = require.context('.', false, /\.(vue|tsx)$/)
   const components: any = {
   }
   files.keys().forEach(
