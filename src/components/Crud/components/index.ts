@@ -1,10 +1,13 @@
-const files = require.context('.', false, /\.(vue|tsx)$/)
-const generators = files.keys().map(key => files(key).default)
-
-const components: any = {
+export default function findComponent() {
+  const files = require.context('.', false, /\.vue$/)
+  const components: any = {
+  }
+  files.keys().forEach(
+    (key) => {
+      const contextValue = files(key).default
+      const name = contextValue && contextValue.options && contextValue.options.name
+      components[name] = contextValue
+    }
+  )
+  return components
 }
-generators.forEach((component) => {
-  components[component.name] = component
-})
-
-export default components
