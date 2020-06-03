@@ -25,7 +25,34 @@
       @refresh="refresh"
       @loading-btn="loadingBtn"
       v-on="$listeners"
-    />
+    >
+      <template #search>
+        <crud-search
+          v-if="searchColumns.length"
+        >
+          <crud-form
+            :columns="searchColumns"
+            :label-width="options.labelWidth"
+            label-position="top"
+            form-status="search"
+            :rules="options.searchRules"
+            @trigger-event="triggerEvent"
+            v-on="$listeners"
+          >
+            <template
+              v-for="column in searchSlotColumns"
+              :slot="column.prop + 'Search'"
+              slot-scope="scope"
+            >
+              <slot
+                :name="column.prop + TEXT.SLOT_FORM_SUFFIX"
+                v-bind="scope"
+              />
+            </template>
+          </crud-form>
+        </crud-search>
+      </template>
+    </crud-top-actions>
     <crud-generate-table
       v-bind="$attrs"
       :table-options="options.tableOptions"
@@ -56,7 +83,7 @@
     >
       <el-col :span="24">
         <crud-pagination
-          :pagination="$attrs.pagination"
+          :pagination.sync="paginate"
           v-on="$listeners"
         />
       </el-col>
@@ -90,14 +117,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Provide, Watch } from 'vue-property-decorator'
+import { Component, Vue, Prop, Provide, Watch, PropSync } from 'vue-property-decorator'
 import { ColumnOptions, TableColumns, TableOptions, FormStatus } from '@/components/Crud/interfaces/table.interface'
 import { ROW_DEL_NAME, ROW_EDIT_NAME } from './constatns/text.constant'
 import { EventMixin } from './mixins/event'
 import loadComponents from './components/index'
 import CrudDialog from './dialog.vue'
 import CrudForm from './form.vue'
-
 @Component({
   name: 'CrudTable',
   components: {
@@ -113,9 +139,12 @@ export default class CrudTable extends EventMixin {
     }
     return false
   }
+  @PropSync('pagination', { default: () => ({}) }) paginate!: any
 
   formSlotColumns: any = []
   tableSlotColumns: any = []
+  searchSlotColumns: any = []
+  searchColumns: any = []
   currentRow: any[] = [] // 选中行
 
   get tableListeners() {
@@ -126,7 +155,14 @@ export default class CrudTable extends EventMixin {
       this.$listeners,
       {
         'row-dblclick': this.dblclick,
-        'current-change': this.currentChange
+        'current-change': this.currentChange,
+        'filter-change': (...args: any) => {
+          this.paginate.page = 1
+          this.eventLoadingBtn('filter-change', args)
+        },
+        'sort-change': (...args: any) => {
+          this.eventLoadingBtn('sort-change', args[0])
+        }
       }
     )
   }
@@ -141,6 +177,10 @@ export default class CrudTable extends EventMixin {
 
   loadingBtn(event: Function) {
     event && event(this.changeLoadingStatus)
+  }
+
+  eventLoadingBtn(eventName: string, args: any) {
+    this.$emit(eventName, args, this.changeLoadingStatus)
   }
 
   // 高亮按钮
@@ -198,7 +238,7 @@ export default class CrudTable extends EventMixin {
     button.event && button.event(scope, this.changeLoadingStatus)
   }
 
-  @Watch('columns', { deep: true, immediate: true })
+  @Watch('columns', { immediate: true })
   initTable() {
     console.log('columns', '更新')
     if (!this.columns || (this.columns && !this.columns.length)) return
@@ -209,6 +249,23 @@ export default class CrudTable extends EventMixin {
     this.tableSlotColumns = this.showColumns.filter((column: any) => {
       return column.columnSlot === true
     })
+    // searchColumns
+    this.searchColumns = []
+    // searchSlotsColumns
+    this.searchSlotColumns = []
+
+    this.showColumns.forEach((column: any) => {
+      column.search && this.searchColumns.push({
+        ...column,
+        form: true,
+        span: column.searchSpan || 8
+      })
+      column.searchSlot && this.searchSlotColumns.push({
+        ...column,
+        span: column.searchSpan || 8
+      })
+    })
+
     // 多层传递的ColumnSlot
     this.formSlotColumns = this.showColumns.filter((column: any) => {
       return column.formSlot === true
@@ -233,6 +290,7 @@ export default class CrudTable extends EventMixin {
 
   // 触发事件
   triggerEvent(eventName: string, formData: any) {
+    console.log(eventName, formData)
     this.$emit(eventName, formData, this.changeLoadingStatus, this.hideFormDialogShow)
   }
 

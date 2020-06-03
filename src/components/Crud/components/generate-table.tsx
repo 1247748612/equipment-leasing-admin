@@ -33,7 +33,7 @@ export default class CrudGenerateTable extends Vue {
     return <el-table-column type="selection" header-align="center" align="center" width="auto"></el-table-column>
   }
   indexColumnElement() {
-    return <el-table-column type="index" align="center" header-align="center" width="auto"></el-table-column>
+    return <el-table-column type="index" align="center" fixed="left" header-align="center" width="auto"></el-table-column>
   }
 
   get menuColumnAttributes() {
@@ -60,12 +60,20 @@ export default class CrudGenerateTable extends Vue {
 
   get columnElements() {
     const tableColumns = []
+    if (this.tableOptions.index) {
+      tableColumns.push(this.indexColumnElement())
+    }
+    if (this.tableOptions.selection) {
+      tableColumns.push(this.selectionColumnElement())
+    }
     this.columns.forEach((column) => {
       const attributes = column.columnAttributes || {}
       const attrs = lodash.defaultsDeep(attributes, {
         headerAlign: 'center',
-        align: 'center'
+        align: 'center',
+        prop: column.prop
       })
+
       const columnElement =
         <el-table-column attrs={{ ...attrs }} label={column.label}
           {...this.tableColumnChild(column)}
@@ -74,12 +82,6 @@ export default class CrudGenerateTable extends Vue {
       tableColumns.push(columnElement)
     })
 
-    if (this.tableOptions.selection) {
-      tableColumns.unshift(this.selectionColumnElement())
-    }
-    if (this.tableOptions.index) {
-      tableColumns.unshift(this.indexColumnElement())
-    }
     if (this.menuColumn) {
       tableColumns.push(this.menuColumnElement())
     }

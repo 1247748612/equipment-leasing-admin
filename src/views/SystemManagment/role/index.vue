@@ -217,6 +217,7 @@ export default class Role extends RoleTableOptions {
       otherBtn: [
         {
           text: '复制新增',
+          identifier: 'role_add',
           attributes: {
             type: 'primary',
             size: 'small'
@@ -233,10 +234,10 @@ export default class Role extends RoleTableOptions {
       otherBtn: [
         {
           text: '菜单分配',
+          identifier: 'role_assign_menu',
           attributes: {
             type: 'text',
-            size: 'small',
-            identifier: 'assign_menu'
+            size: 'small'
           },
           event: ({ row }: { row: any}) => {
             this.menus = row.menus

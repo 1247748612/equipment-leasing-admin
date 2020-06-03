@@ -1,7 +1,7 @@
 import { CrudTableOptions, PaginationOptions } from '@/components/Crud/interfaces/table.interface'
 import { Vue } from 'vue-property-decorator'
 import lodash from 'lodash'
-import { ColumnOptions } from '../../../components/Crud/interfaces/table.interface'
+import { ColumnOptions, TableOptions } from '../../../components/Crud/interfaces/table.interface'
 
 export class RoleTableOptions extends Vue {
   tableOptions: CrudTableOptions = {}
@@ -103,26 +103,29 @@ export class RoleTableOptions extends Vue {
     this.tableOptions.columns = this.assign(columns, data)
   }
 
-  setColumnOptions(data: any) {
+  concatColumnOptions(data: any) {
     const keys = Object.keys(data)
     if (!keys.length) {
       return
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return {
-          ...column,
-          options: data[column.prop]
-        }
+        return lodash.defaultsDeep(column, data[column.prop])
       } else {
         return column
       }
     })
+    console.log(this.tableOptions.columns, 'setColumnOptions')
   }
 
   setOptions(data: any = {}) {
-    const options = {
+    const options: TableOptions = {
       labelWidth: 'auto', // 对应
+      topActions: {
+        addBtn: {
+          identifier: 'role_add'
+        }
+      },
       menuColumn: {
         editBtn: {
           identifier: 'role_edit'

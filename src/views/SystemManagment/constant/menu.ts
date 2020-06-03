@@ -1,7 +1,6 @@
-import { CrudTableOptions, PaginationOptions } from '@/components/Crud/interfaces/table.interface'
+import { CrudTableOptions, PaginationOptions, ColumnOptions, TableOptions } from '@/components/Crud/interfaces/table.interface'
 import { Vue } from 'vue-property-decorator'
 import lodash from 'lodash'
-import { ColumnOptions } from '../../../components/Crud/interfaces/table.interface'
 
 export class MenuTableOptions extends Vue {
   tableOptions: CrudTableOptions = {}
@@ -287,17 +286,14 @@ export class MenuTableOptions extends Vue {
     this.tableOptions.columns = [...columns, ...data]
   }
 
-  setColumnOptions(data: any) {
+  concatColumnOptions(data: any) {
     const keys = Object.keys(data)
     if (!keys.length) {
       return
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return {
-          ...column,
-          options: data[column.prop]
-        }
+        return lodash.defaultsDeep(column, data[column.prop])
       } else {
         return column
       }
@@ -306,8 +302,13 @@ export class MenuTableOptions extends Vue {
   }
 
   setOptions(data: any = {}) {
-    const options = {
+    const options: TableOptions = {
       labelWidth: 'auto', // 对应
+      topActions: {
+        addBtn: {
+          identifier: 'menu_add'
+        }
+      },
       menuColumn: {
         editBtn: {
           type: 'text',

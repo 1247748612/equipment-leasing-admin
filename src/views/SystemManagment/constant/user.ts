@@ -1,7 +1,7 @@
 import { CrudTableOptions, PaginationOptions } from '@/components/Crud/interfaces/table.interface'
 import { Vue } from 'vue-property-decorator'
 import lodash from 'lodash'
-import { ColumnOptions } from '../../../components/Crud/interfaces/table.interface'
+import { ColumnOptions, TableOptions } from '../../../components/Crud/interfaces/table.interface'
 
 export class UserTableOptions extends Vue {
   tableOptions: CrudTableOptions = {}
@@ -31,7 +31,9 @@ export class UserTableOptions extends Vue {
         { required: true, message: '昵称必须填写', trigger: 'blur' }
       ],
       phoneNumber: [
-        { required: true, message: '手机号必须填写', trigger: 'blur' }
+        { required: true, message: '手机号必须填写', trigger: 'blur' },
+        { min: 11, message: '手机号最少11位', trigger: 'blur' },
+        { max: 11, message: '手机号最多11位', trigger: 'blur' }
       ]
     }
     this.tableOptions.rules = this.assign(rules, data)
@@ -63,7 +65,8 @@ export class UserTableOptions extends Vue {
         type: 'string',
         prop: 'username',
         label: '登录用户名',
-        span: 24
+        span: 24,
+        search: true
       },
       {
         type: 'string',
@@ -76,6 +79,7 @@ export class UserTableOptions extends Vue {
       {
         type: 'string',
         prop: 'phoneNumber',
+        search: true,
         label: '手机号',
         attributes: {
           form: {
@@ -153,32 +157,59 @@ export class UserTableOptions extends Vue {
           }
         },
         value: true
+      },
+      {
+        type: 'switch',
+        prop: 'useRegex',
+        label: '是否模糊搜索',
+        attributes: {
+          form: {
+            'active-text': '启用',
+            'inactive-text': '禁用'
+          },
+          column: {
+            true: '启用',
+            false: '禁用'
+          }
+        },
+        value: true,
+        form: false,
+        show: false,
+        search: true
       }
     ]
     this.tableOptions.columns = this.assign(columns, data)
   }
 
-  setColumnOptions(data: any) {
+  concatColumnOptions(data: any) {
     const keys = Object.keys(data)
     if (!keys.length) {
       return
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return {
-          ...column,
-          options: data[column.prop]
-        }
+        return lodash.defaultsDeep(column, data[column.prop])
       } else {
         return column
       }
     })
+    console.log(this.tableOptions.columns, 'setColumnOptions')
   }
 
   setOptions(data: any = {}) {
-    const options = {
+    const options: TableOptions = {
       title: '用户管理',
       labelWidth: 'auto', // 对应
+      topActions: {
+        addBtn: {
+          identifier: 'user_add'
+        }
+      },
+      searchRules: {
+        username: [
+          { required: true, message: '必须填写', trigger: 'blur' }
+        ]
+      },
       menuColumn: {
         editBtn: {
           identifier: 'user_edit'

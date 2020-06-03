@@ -7,11 +7,11 @@
     <el-form
       v-if="renderStatus"
       ref="form"
-      :label-width="$attrs['label-width'] || 'auto'"
-      label-position="right"
+      :label-position="$attrs['label-position'] || 'right'"
       size="small"
       :model="formData"
       :rules="$attrs.rules"
+      :label-width="$attrs['label-width'] || 'auto'"
     >
       <el-row
         :gutter="20"
@@ -49,19 +49,27 @@
       >
         <el-form-item>
           <el-button
-            v-if="formStatus !== 'custom'"
-            type="primary"
-            @click="submit"
-          >
-            {{ formStatus === 'add' ? TEXT.FORM_ADD_BTN_TEXT : TEXT.FORM_EDIT_BTN_TEXT }}
-          </el-button>
-          <el-button
-            v-else
+            v-if="formStatus === 'custom'"
             type="primary"
             @click="trigger"
           >
             {{ TEXT.FORM_CUSTOM_BTN_TEXT }}
           </el-button>
+          <el-button
+            v-else-if="formStatus === 'search'"
+            type="primary"
+            @click="search"
+          >
+            {{ TEXT.FORM_SEARCH_BTN_TEXT }}
+          </el-button>
+          <el-button
+            v-else
+            type="primary"
+            @click="submit"
+          >
+            {{ formStatus === 'add' ? TEXT.FORM_ADD_BTN_TEXT : TEXT.FORM_EDIT_BTN_TEXT }}
+          </el-button>
+
           <el-button @click="resetFileds">
             {{ TEXT.FORM_RESET_BTN_TEXT }}
           </el-button>
@@ -91,7 +99,7 @@ export default class CrudForm extends Vue {
   @Model('input', { default: () => ({}) }) defaultFormData!: object
   // 隐藏form-item字段
   @Prop({ type: Object, default: () => ({}) }) hideFormItem!: any
-  @Prop({ type: String, default: 'custom' }) formStatus!: string
+  @Prop({ type: String, default: FormStatus.Custom }) formStatus!: FormStatus
   @Inject({ default: () => {} }) closeDialog!: Function
 
   renderStatus: boolean = true // 重新渲染
@@ -137,6 +145,9 @@ export default class CrudForm extends Vue {
   // 重置按钮
   resetFileds() {
     this.$refs.form.resetFields()
+    if (this.formStatus === FormStatus.Search) {
+      this.search()
+    }
   }
 
   // 提交按钮
@@ -148,6 +159,21 @@ export default class CrudForm extends Vue {
       validate.then((res) => {
         this.submitEvent()
       }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+
+  // 提交按钮
+  search() {
+    const validate = this.$refs.form.validate()
+    if (!validate) {
+      this.submitSearch()
+    } else {
+      validate.then((res) => {
+        this.submitSearch()
+      }).catch((err) => {
+        this.submitSearch()
         console.log(err)
       })
     }
@@ -175,6 +201,12 @@ export default class CrudForm extends Vue {
   submitCustom() {
     const formData = this.delHideProp()
     this.$emit('save', formData, this.closeDialog)
+  }
+
+  // 单独使用form表单
+  submitSearch() {
+    const formData = this.delHideProp()
+    this.$emit('trigger-event', 'search', formData)
   }
 
   // 触发事件

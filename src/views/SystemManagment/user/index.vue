@@ -12,6 +12,7 @@
       @edit-event="editBtn"
       @add-event="addBtn"
       @del-event="delBtn"
+      @search="search"
       @load-data="loadData"
       @row-dblclick="dblclick"
     >
@@ -63,6 +64,7 @@ export default class User extends UserTableOptions {
   dialogTitle = '分配角色'
   formDialogShow: boolean = false // 菜单分配弹窗
   rolesOptions = []
+  filterParams: any = {}
   defaultFormData: any = {
     roleIds: [],
     userId: ''
@@ -84,7 +86,8 @@ export default class User extends UserTableOptions {
           }
         },
         options: this.rolesOptions
-      }]
+      }
+    ]
     return columns
   }
 
@@ -178,6 +181,19 @@ export default class User extends UserTableOptions {
       })
   }
 
+  search(formData: any, loading: Function) {
+    formData = JSON.parse(JSON.stringify(formData))
+    const params: any = {
+      search: null,
+      useRegex: formData.useRegex
+    }
+    Reflect.deleteProperty(formData, 'useRegex')
+    params.search = Object.keys(formData).join(',')
+    this.filterParams = { ...this.filterParams, ...params, ...formData }
+    this.loadData(loading)
+    console.log(formData, params, loading)
+  }
+
   dblclick(...args: any) {
     const open = args[3]
     open()
@@ -187,7 +203,8 @@ export default class User extends UserTableOptions {
     loading && loading()
     const params = {
       limit: this.pagination.limit,
-      page: this.pagination.page
+      page: this.pagination.page,
+      ...this.filterParams
     }
 
     userPagination(params).then((res) => {
@@ -211,6 +228,7 @@ export default class User extends UserTableOptions {
       otherBtn: [
         {
           text: '复制新增',
+          identifier: 'user_add',
           attributes: {
             type: 'primary',
             size: 'small'
@@ -227,10 +245,10 @@ export default class User extends UserTableOptions {
       otherBtn: [
         {
           text: '分配角色',
+          identifier: 'role_assign_role',
           attributes: {
             type: 'text',
-            size: 'small',
-            identifier: 'assign_role'
+            size: 'small'
           },
           event: ({ row }: { row: any}) => {
             const roleIds: any[] = row.roles

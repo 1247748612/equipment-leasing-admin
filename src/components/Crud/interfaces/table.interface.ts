@@ -13,7 +13,9 @@
 
 export enum FormStatus {
   ADD = 'add',
-  EDIT = 'edit'
+  EDIT = 'edit',
+  Search = 'search',
+  Custom = 'custom'
 }
 
 /*
@@ -27,6 +29,9 @@ export interface ColumnOptions {
   prop: string, // key
   show?: boolean, // 表格是否展示 默认true
   form?: boolean, // 表单是否展示 默认 true
+  search?: boolean // 是否搜索
+  searchSlot?: boolean // 是否搜索
+  searchSpan?: number // 和span一样
   formSlot?: boolean, // 表单slot ex. v-slot:iconForm
   columnSlot?: boolean, // 表格slot ex. v-slot:icon
   format?: string, // 格式化
@@ -95,6 +100,7 @@ export interface PaginationOptions {
 
 export interface TableOptions {
   title?: string // 标题
+  searchRules?: any // 搜索表单的规则
   labelWidth?: string // el-form-item label的宽度
   menuColumn?: MenuColumn | boolean, // 为false则不展示菜单项
   topActions?: TopActions | boolean, // 顶部按钮配置
@@ -125,7 +131,7 @@ export interface CrudTableOptions {
       [key: string]: any[] // value: 展示的prop
     }
   }
-  rules?: { // 对应el-form表单的rules
+  rules?: { // TableOptions对应el-form表单的rules
     [key: string]: any
   }
 }

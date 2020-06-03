@@ -5,5 +5,6 @@ export const ROW_DEL_NAME = '删除'
 
 export const FORM_ADD_BTN_TEXT = '保存新增'
 export const FORM_EDIT_BTN_TEXT = '保存更改'
+export const FORM_SEARCH_BTN_TEXT = '搜索'
 export const FORM_CUSTOM_BTN_TEXT = '保存'
 export const FORM_RESET_BTN_TEXT = '重置数据'

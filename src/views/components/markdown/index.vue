@@ -12,12 +12,12 @@ import { ColumnOptions } from '@/components/Crud/interfaces/table.interface'
 import { CrudMarkdown } from '@/components/Crud'
 
 @Component({
-  name: 'Tinymce',
+  name: 'Markdown',
   components: {
     CrudMarkdown
   }
 })
-export default class Tinymce extends Vue {
+export default class Markdown extends Vue {
   value: any = ''
 }
 

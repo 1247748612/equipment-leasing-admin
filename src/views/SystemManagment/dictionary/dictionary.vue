@@ -158,6 +158,7 @@ export default class DictionaryType extends DictionaryTableOptions {
       otherBtn: [
         {
           text: '复制新增',
+          identifier: 'dictionary_add',
           attributes: {
             type: 'primary',
             size: 'small'

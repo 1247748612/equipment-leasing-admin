@@ -97,21 +97,19 @@ export class OnlineUserTableOptions extends Vue {
     this.tableOptions.columns = this.assign(columns, data)
   }
 
-  setColumnOptions(data: any) {
+  concatColumnOptions(data: any) {
     const keys = Object.keys(data)
     if (!keys.length) {
       return
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return {
-          ...column,
-          options: data[column.prop]
-        }
+        return lodash.defaultsDeep(column, data[column.prop])
       } else {
         return column
       }
     })
+    console.log(this.tableOptions.columns, 'setColumnOptions')
   }
 
   setOptions(data: any = {}) {

@@ -40,7 +40,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { deleteMenu, createMenu, updateMenu } from '@/api/menus'
 import { componentPathOption } from '@/utils/utils'
-import { CrudTableOptions } from '@/components/Crud/interfaces/table.interface'
+import { CrudTableOptions, TopActions } from '@/components/Crud/interfaces/table.interface'
 import { UserModule } from '../../../store/modules/user'
 import { CrudTable } from '@/components/Crud'
 import SvgIcon from 'vue-svgicon'
@@ -55,8 +55,10 @@ import { MenuTableOptions } from '../constant/menu'
 export default class Menu extends MenuTableOptions {
   get tableData() {
     console.log(UserModule.menus, 'menus')
-    this.setColumnOptions({
-      pid: UserModule.menus
+    this.concatColumnOptions({
+      pid: {
+        options: UserModule.menus
+      }
     })
     return UserModule.menus
   }
@@ -146,10 +148,11 @@ export default class Menu extends MenuTableOptions {
 
   loadOptions() {
     this.getTableOptions()
-    const topActions = {
+    const topActions: TopActions = {
       otherBtn: [
         {
           text: '复制新增',
+          identifier: 'menu_add',
           attributes: {
             type: 'primary',
             size: 'small'
@@ -173,9 +176,13 @@ export default class Menu extends MenuTableOptions {
   created() {
     this.loadOptions()
     this.setPermission(UserModule.permission)
-    this.setColumnOptions({
-      pid: this.tableData,
-      componentPath: componentPathOption()
+    this.concatColumnOptions({
+      pid: {
+        options: this.tableData
+      },
+      componentPath: {
+        options: componentPathOption()
+      }
     })
   }
 }

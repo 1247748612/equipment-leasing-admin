@@ -7,6 +7,9 @@
       :options="tableOptions.options"
       :pagination.sync="pagination"
       :permission="tableOptions.permission"
+      @filter-change="filterChange"
+      @sort-change="sortChange"
+      @search="search"
       @load-data="loadData"
     >
       <template
@@ -45,6 +48,7 @@ import { UserModule } from '@/store/modules/user'
 })
 export default class Logging extends LoggingTableOptions {
   tableData = [] // 获取的数据
+  filterParams: any = {}
 
   dellAllLog(loading: Function) {
     this.$confirm('是否删除所有日志', '确认信息', {
@@ -70,7 +74,8 @@ export default class Logging extends LoggingTableOptions {
   loadData(loading?: Function) {
     const parmas = {
       limit: this.pagination.limit,
-      page: this.pagination.page
+      page: this.pagination.page,
+      ...this.filterParams
     }
     loading && loading()
     logPagination(parmas).then((res) => {
@@ -84,6 +89,47 @@ export default class Logging extends LoggingTableOptions {
       this.$message.success(err.errMessage as any)
       loading && loading()
     })
+  }
+
+  search(formData: any, loading: Function) {
+    formData = JSON.parse(JSON.stringify(formData))
+    const params: any = {
+      search: null,
+      useRegex: formData.useRegex
+    }
+    Reflect.deleteProperty(formData, 'useRegex')
+    params.search = Object.keys(formData).join(',')
+    this.filterParams = { ...this.filterParams, ...params, ...formData }
+    this.loadData(loading)
+    console.log(formData, params, loading)
+  }
+
+  filterChange(args: Array<any>, loading: Function) {
+    const params: any = {}
+    args.forEach((item: any) => {
+      Object.keys(item).forEach((key) => {
+        params[key] = item[key].length ? item[key].join(',') : null
+      })
+    })
+    this.filterParams = { ...this.filterParams, ...params }
+    this.loadData(loading)
+    console.log(args)
+  }
+
+  /// http://localhost:8080/api-dev/user/pagination?limit=10&page=1&search=username%7CKV%7Csdfwer%7CRE%7CphoneNumber%7CKV%7Cwerwer&useRegex=true
+  sortChange(args: any, loading: Function) {
+    const params: any = {
+    }
+    params.sort = args.order ? `${args.prop}_${args.order}` : args.order
+    // args.forEach((item: any) => {
+    //   params.sort = `${item}`
+    //   // params.sort[item.prop] = item.order
+    // })
+
+    this.filterParams = { ...this.filterParams, ...params }
+    this.loadData(loading)
+
+    console.log(args, params, '排序')
   }
 
   created() {
@@ -102,6 +148,51 @@ export default class Logging extends LoggingTableOptions {
         }
       ]
     }
+    const columnOptions = {
+      type: {
+        columnAttributes: {
+          filters: [
+            {
+              text: '正常',
+              value: 0
+            },
+            {
+              text: '异常',
+              value: 1
+            }
+          ],
+          'column-key': 'type',
+          'filter-multiple': false
+        }
+      },
+      method: {
+        columnAttributes: {
+          filters: [
+            {
+              text: 'GET',
+              value: 'GET'
+            },
+            {
+              text: 'POST',
+              value: 'POST'
+            },
+            {
+              text: 'DELETE',
+              value: 'DELETE'
+            },
+            {
+              text: 'PUT',
+              value: 'PUT'
+            },
+            {
+              text: 'PATCH',
+              value: 'PATCH'
+            }
+          ]
+        }
+      }
+    }
+    this.concatColumnOptions(columnOptions)
     this.setOptions({ topActions })
     this.setPermission(UserModule.permission)
   }

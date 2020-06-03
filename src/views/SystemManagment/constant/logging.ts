@@ -32,8 +32,10 @@ export class LoggingTableOptions extends Vue {
         type: 'string',
         label: '标题',
         prop: 'title',
+        search: true,
         columnAttributes: {
-          'min-width': '100',
+          // 'min-width': '100',
+          'show-overflow-tooltip': true,
           fixed: 'left'
         }
       },
@@ -68,7 +70,10 @@ export class LoggingTableOptions extends Vue {
       {
         type: 'string',
         label: '访问地址',
-        prop: 'url'
+        prop: 'url',
+        columnAttributes: {
+          'show-overflow-tooltip': true
+        }
       },
       {
         type: 'string',
@@ -88,7 +93,8 @@ export class LoggingTableOptions extends Vue {
         columnAttributes: {
           align: 'center',
           headerAlign: 'center',
-          width: '80'
+          width: '100',
+          'column-key': 'method'
         }
       },
       {
@@ -118,22 +124,38 @@ export class LoggingTableOptions extends Vue {
         columnAttributes: {
           'show-overflow-tooltip': true
         }
+      },
+      {
+        type: 'date',
+        prop: 'createdAt',
+        label: '创建时间',
+        format: 'YYYY年M月D日 H:mm:ss',
+        form: false,
+        columnAttributes: {
+          'show-overflow-tooltip': true,
+          sortable: 'custom'
+        }
+      },
+      {
+        type: 'date',
+        prop: 'updatedAt',
+        label: '更新时间',
+        format: 'YYYY年M月D日 H:mm:ss',
+        show: false,
+        form: false
       }
     ]
     this.tableOptions.columns = [...columns, ...data]
   }
 
-  setColumnOptions(data: any) {
+  concatColumnOptions(data: any) {
     const keys = Object.keys(data)
     if (!keys.length) {
       return
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return {
-          ...column,
-          options: data[column.prop]
-        }
+        return lodash.defaultsDeep(column, data[column.prop])
       } else {
         return column
       }
@@ -149,6 +171,8 @@ export class LoggingTableOptions extends Vue {
       labelWidth: 'auto', // 对应
       menuColumn: false,
       tableOptions: {
+        index: true,
+        // selection: true,
         stripe: true,
         height: '76vh',
         border: true
