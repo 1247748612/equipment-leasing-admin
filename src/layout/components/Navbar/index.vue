@@ -25,23 +25,20 @@
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/currentInfo">
+            <el-dropdown-item>
+              个人信息
             </el-dropdown-item>
           </router-link>
           <a
             target="_blank"
-            href="https://github.com/armour/vue-typescript-admin-template/"
+            href="https://github.com/1247748612/equipment-leasing-admin"
           >
             <el-dropdown-item>
               Github
-            </el-dropdown-item>
-          </a>
-          <a
-            target="_blank"
-            href="https://armour.github.io/vue-typescript-admin-docs/"
-          >
-            <el-dropdown-item>
-              Docs
             </el-dropdown-item>
           </a>
           <el-dropdown-item divided>
@@ -90,6 +87,9 @@ export default class extends Vue {
   private async logout() {
     await UserModule.LogOut()
     this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+  }
+
+  private async showInfo() {
   }
 }
 </script>

@@ -16,6 +16,7 @@
               size="small"
               :type="addBtn.type ? addBtn.type : 'primary'"
               v-bind="addBtn.attributes"
+              icon="el-icon-plus"
               @click.stop="$emit('add-btn')"
             >
               新增

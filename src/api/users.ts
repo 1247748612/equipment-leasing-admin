@@ -86,3 +86,11 @@ export const outOnlineUser = (data?: any) => {
     data
   })
 }
+
+export const changePassword = (data?: any) => {
+  return request({
+    url: '/user/changePassword',
+    method: 'PATCH',
+    data
+  })
+}

@@ -38,6 +38,10 @@ class User extends VuexModule implements IUserState {
     return (this.userInfo && this.userInfo.permissionIdentifierList) || []
   }
 
+  get info() {
+    return this.userInfo
+  }
+
   @Mutation
   private SET_TOKEN(token: string) {
     this.token = token

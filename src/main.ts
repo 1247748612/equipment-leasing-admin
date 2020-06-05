@@ -11,6 +11,8 @@ import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
 import axios from 'axios'
+import { ShowIcon } from '@/components/Crud/index'
+
 import '@/icons/components'
 import '@/permission'
 import './plugins/index'
@@ -21,6 +23,7 @@ Vue.use(SvgIcon, {
   defaultWidth: '1em',
   defaultHeight: '1em'
 })
+Vue.component(ShowIcon.name, ShowIcon)
 
 Vue.config.productionTip = false
 
@@ -29,3 +32,6 @@ new Vue({
   store,
   render: (h) => h(App)
 }).$mount('#app')
+
+// iconfont 一键点击
+// Array.from(document.getElementsByClassName("icon-gouwuche1")).forEach(item => item.click())

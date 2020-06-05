@@ -65,6 +65,16 @@ export const constantRoutes: RouteConfig[] = [
           title: '首页',
           icon: 'dashboard'
         }
+      },
+      {
+        path: 'currentInfo',
+        name: 'info',
+        component: () => import(/* webpackChunkName: "info" */ '@/views/Info/index.vue'),
+        meta: {
+          title: '个人信息',
+          icon: 'dashboard',
+          hidden: true
+        }
       }
     ]
   },

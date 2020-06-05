@@ -16,7 +16,10 @@
 
       <el-form-item prop="name">
         <span class="svg-container">
-          <svg-icon name="menu" />
+          <show-icon
+            color="#fff"
+            name="iconjurassic_user1"
+          />
         </span>
         <el-input
           ref="name"
@@ -30,7 +33,10 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon name="password" />
+          <show-icon
+            color="#fff"
+            name="iconjurassic_password"
+          />
         </span>
         <el-input
           :key="passwordType"
@@ -46,7 +52,10 @@
           class="show-pwd"
           @click="showPwd"
         >
-          <svg-icon :name="passwordType === 'password' ? 'eye-off' : 'eye-on'" />
+          <show-icon
+            color="#fff"
+            :name="passwordType === 'password' ? 'iconjurassic_loseeyes' : 'iconjurassic_openeyes1'"
+          />
         </span>
       </el-form-item>
 
@@ -217,8 +226,8 @@ export default class extends Vue {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background-color: $loginBg;
-
+  // background-color: $loginBg;
+  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
   .login-form {
     position: relative;
     width: 520px;

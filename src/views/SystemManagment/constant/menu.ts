@@ -89,6 +89,16 @@ export class MenuTableOptions extends Vue {
           'noCache',
           'affix',
           'hidden'
+        ],
+        2: [
+          'name',
+          'componentPath',
+          'permissionIdentifier',
+          'alwaysShow',
+          'breadcrumb',
+          'noCache',
+          'affix'
+          // 'hidden'
         ]
       }
     }
@@ -140,6 +150,10 @@ export class MenuTableOptions extends Vue {
           {
             label: '按钮',
             value: 1
+          },
+          {
+            label: '外链',
+            value: 2
           }
         ],
         columnAttributes: {
@@ -174,11 +188,10 @@ export class MenuTableOptions extends Vue {
         label: '组件'
       },
       {
-        type: 'string',
+        type: 'icon',
         prop: 'icon',
         label: '图标',
-        columnSlot: true,
-        formSlot: true,
+        // formSlot: true,
         columnAttributes: {
           width: '50'
         }
@@ -280,7 +293,7 @@ export class MenuTableOptions extends Vue {
             'inactive-text': '隐藏'
           }
         },
-        value: true
+        value: false
       }
     ]
     this.tableOptions.columns = [...columns, ...data]
@@ -293,12 +306,15 @@ export class MenuTableOptions extends Vue {
     }
     this.tableOptions.columns = (this.tableOptions.columns as any).map((column: any) => {
       if (keys.includes(column.prop)) {
-        return lodash.defaultsDeep(column, data[column.prop])
+        const propData = data[column.prop]
+        if (propData.options) {
+          column.options = []
+        }
+        return lodash.defaultsDeep(column, propData)
       } else {
         return column
       }
     })
-    console.log(this.tableOptions.columns, 'setColumnOptions')
   }
 
   setOptions(data: any = {}) {

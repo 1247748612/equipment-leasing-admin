@@ -94,6 +94,7 @@ export default class CrudGenerateTable extends Vue {
       buttonElements.push(
         <el-button
           size="mini"
+          icon="el-icon-edit"
           type={this.editBtn.type || 'text'}
           onClick={() => { this.emit('edit-click', scope) }}
         >
@@ -106,6 +107,7 @@ export default class CrudGenerateTable extends Vue {
       buttonElements.push(
         <el-button
           size="mini"
+          icon="el-icon-delete"
           type={this.delBtn.type || 'text'}
           onClick={() => { this.emit('del-click', scope) }}
         >

@@ -12,7 +12,7 @@
           :index="resolvePath(theOnlyOneChild.path)"
           :class="{'submenu-title-noDropdown': isFirstLevel}"
         >
-          <svg-icon
+          <sidebar-icon
             v-if="theOnlyOneChild.meta.icon"
             :name="theOnlyOneChild.meta.icon"
           />
@@ -29,7 +29,7 @@
       popper-append-to-body
     >
       <template slot="title">
-        <svg-icon
+        <sidebar-icon
           v-if="item.meta && item.meta.icon"
           :name="item.meta.icon"
         />
@@ -59,13 +59,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Route, RouteConfig } from 'vue-router'
 import { isExternal } from '@/utils/validate'
 import SidebarItemLink from './SidebarItemLink.vue'
+import SidebarIcon from './SidebarIcon.vue'
 
 @Component({
   // Set 'name' here to prevent uglifyjs from causing recursive component not work
   // See https://medium.com/haiiro-io/element-component-name-with-vue-class-component-f3b435656561 for detail
   name: 'SidebarItem',
   components: {
-    SidebarItemLink
+    SidebarItemLink,
+    SidebarIcon
   }
 })
 export default class extends Vue {
@@ -153,11 +155,11 @@ export default class extends Vue {
 </style>
 
 <style lang="scss" scoped>
-.svg-icon {
+.icon-wrap {
   margin-right: 16px;
 }
 .simple-mode {
-  .svg-icon {
+  .icon-wrap {
     margin-left: 20px;
   }
 }

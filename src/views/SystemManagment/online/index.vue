@@ -7,24 +7,7 @@
       :options="tableOptions.options"
       :permission="tableOptions.permission"
       @load-data="loadData"
-    >
-      <template
-        v-slot:icon="scope"
-      >
-        <svg-icon :name="scope.row.icon" />
-      </template>
-      <template
-        v-slot:iconForm="{formData, propName}"
-      >
-        <div class="input-wrap">
-          <el-input
-            v-model="formData[propName]"
-            placeholder="请输入图标"
-          />
-          <svg-icon :name="formData[propName]" />
-        </div>
-      </template>
-    </crud-table>
+    />
   </div>
 </template>
 

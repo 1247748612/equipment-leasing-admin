@@ -60,7 +60,7 @@ export function joinRoute(menus: any) {
   const asyncRoute: RouteConfig[] = []
   menus.forEach((item: any) => {
     const routeItem: RouteConfig = recursiveChildrenRoute(item)
-    if (routeItem && (routeItem as any).type === 0) {
+    if (routeItem && (routeItem as any).type !== 1) {
       asyncRoute.push(routeItem)
     }
   })
