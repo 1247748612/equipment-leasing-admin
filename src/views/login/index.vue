@@ -10,7 +10,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          1后台管理系统1
+          后台管理系统
         </h3>
       </div>
 
