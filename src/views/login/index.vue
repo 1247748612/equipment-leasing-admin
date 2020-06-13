@@ -10,7 +10,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          nestjs通用后台管理系统
+          通用后台管理系统
         </h3>
       </div>
 
