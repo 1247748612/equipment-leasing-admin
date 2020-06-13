@@ -11,7 +11,7 @@ import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
 import axios from 'axios'
-import { ShowIcon } from '@/components/Crud/index'
+import ShowIcon from '@/components/Crud/icon.vue'
 
 import '@/icons/components'
 import '@/permission'
@@ -23,6 +23,7 @@ Vue.use(SvgIcon, {
   defaultWidth: '1em',
   defaultHeight: '1em'
 })
+
 Vue.component(ShowIcon.name, ShowIcon)
 
 Vue.config.productionTip = false
