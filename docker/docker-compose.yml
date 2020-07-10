@@ -7,7 +7,7 @@ services:
       dockerfile: ./Dockerfile
     container_name: vue-admin
     volumes:
-      - vue-admin:/app/dist
+      - vue_admin_dist:/app/dist
 
 volumes:
-  vue-admin:
+  vue_admin_dist:
