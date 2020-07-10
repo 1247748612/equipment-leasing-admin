@@ -1,55 +1,13 @@
-version: '3'
+version: "3"
 
 services:
-  redis:
-    image: redis
-    volumes:
-      - redis_db_data:/data/ela/redis
-    restart: always
-    
-  mongo:
-      image: mongo
-      restart: always
-      volumes: 
-        - mongo_db_data:/data/ela/mongo
-
   admin:
-      image: admin
-      volumes:
-        - ela_app_admin:/app/dist
-  
-  ela: 
-    depends_on: 
-      - redis
-      - mongo
-    image: ela
-    restart: always
-    ports:
-      - 3301:3301
-    environment: 
-      MONGO_HOST: mongo
-      REDIS_HOST: redis
-    volumes: 
-      - ela_app:/app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: vue-admin
+    volumes:
+      - vue-admin:/app/dist
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-
-  nginx:
-    depends_on:
-      - ela
-    image: nginx
-    ports:
-      - 80:80
-    volumes: 
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ela_admin:/usr/share/nginx/html
-
-volumes: 
-  ela_app:
-  ela_admin:
-  redis_db_data: 
-  mongo_db_data:
+volumes:
+  vue-admin:
