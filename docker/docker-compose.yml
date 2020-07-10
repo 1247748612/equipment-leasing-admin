@@ -3,8 +3,7 @@ version: "3.8"
 services:
   admin:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
     container_name: vue-admin
     volumes:
       - vue_admin_dist:/app/dist
