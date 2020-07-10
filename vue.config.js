@@ -3,7 +3,7 @@ const path = require('path')
 const name = 'Equipment Lasing Admin'
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/', // TODO: Remember to change this to fit your need
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue-admin/' : '/', // TODO: Remember to change this to fit your need
   lintOnSave: process.env.NODE_ENV === 'development',
   pwa: {
     name: name
