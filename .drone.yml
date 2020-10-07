@@ -1,15 +1,17 @@
 kind: pipeline
 type: ssh
-name: build_equipment-leasing-admin
+name: build-equipment-leasing-admin
 
 server:
   host: 49.232.194.85
   user: root
   password: Dq990821
+
 steps:
   - name: run
     commands:
-      - docker-compose -f ./docker/docker-compose-drone.yml -d
+      # - docker-compose -f ./docker/docker-compose-drone.yml -d
+      - echo hello world
 # steps:
 #   - name: build-test
 #     image: docker
