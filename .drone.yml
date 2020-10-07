@@ -11,9 +11,7 @@ name: exec-build-equipment-leasing-admin
 steps:
   - name: run
     commands:
-      - echo hello world
       - docker-compose -f ./docker/docker-compose-drone.yml -d
-      # - echo hello world
 # steps:
 #   - name: build-test
 #     image: docker
