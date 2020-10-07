@@ -11,6 +11,7 @@ name: exec-build-equipment-leasing-admin
 steps:
   - name: run
     commands:
+      - git --version
       - docker-compose -f ./docker/docker-compose-drone.yml -d
 # steps:
 #   - name: build-test
