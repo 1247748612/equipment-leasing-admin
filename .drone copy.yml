@@ -1,0 +1,35 @@
+---
+kind: pipeline
+type: exec
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: greeting
+  commands:
+  - echo hello world
+
+kind: pipeline
+type: exec
+name: exec-build-equipment-leasing-admin
+
+# server:
+#   host: 49.232.194.85
+#   user: root
+#   password: Dq990821
+
+steps:
+  - name: run
+    commands:
+      - docker-compose -f ./docker/docker-compose-drone.yml -d
+      # - echo hello world
+# steps:
+#   - name: build-test
+#     image: docker
+#     commands:
+#       - docker build -t drone-test  -f .\DroneDockerfile .
+#       - docker pull drone-test
+#       - echo hello world
