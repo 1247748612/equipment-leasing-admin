@@ -12,6 +12,7 @@ steps:
   - name: run
     commands:
       - git --version
+      - echo git
       - docker-compose -f ./docker/docker-compose-drone.yml -d
 # steps:
 #   - name: build-test
