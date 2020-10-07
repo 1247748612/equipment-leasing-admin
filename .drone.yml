@@ -1,22 +1,21 @@
 kind: pipeline
-type: docker
-name: build-equipment-leasing-admin
+type: exec
+name: exec-build-equipment-leasing-admin
 
 # server:
 #   host: 49.232.194.85
 #   user: root
 #   password: Dq990821
 
-# steps:
-#   - name: run
-#     commands:
-#       # - docker-compose -f ./docker/docker-compose-drone.yml -d
-#       - echo hello world
-
 steps:
-  - name: build-test
-    image: docker
+  - name: run
     commands:
-      - docker build -t drone-test  -f .\DroneDockerfile .
-      - docker pull drone-test
-      - echo hello world
+      - docker-compose -f ./docker/docker-compose-drone.yml -d
+      # - echo hello world
+# steps:
+#   - name: build-test
+#     image: docker
+#     commands:
+#       - docker build -t drone-test  -f .\DroneDockerfile .
+#       - docker pull drone-test
+#       - echo hello world
