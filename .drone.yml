@@ -19,3 +19,4 @@ steps:
     commands:
       - docker build -t drone-test  -f .\DroneDockerfile .
       - docker pull drone-test
+      - echo hello world
