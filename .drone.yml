@@ -1,0 +1,18 @@
+kind: pipeline
+type: ssh
+name: build_equipment-leasing-admin
+
+server:
+  host: 49.232.194.85
+  user: root
+  password: Dq990821
+steps:
+  - name: run
+    commands:
+      - docker-compose -f ./docker/docker-compose-drone.yml -d
+# steps:
+#   - name: build-test
+#     image: docker
+#     commands:
+#       - docker build -t drone-test  -f .\DroneDockerfile .
+#       - docker pull drone-test

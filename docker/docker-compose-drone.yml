@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  admin:
+    build:
+      context: ..
+    container_name: vue-admin
+    volumes:
+      - vue_admin_dist:/app/dist
+  nginx:
+    image: nginx
+    depends_on:
+      - admin
+    ports: 3344:80
+    volumes:
+      - vue_admin_dist:/usr/share/nginx/html
+
+volumes:
+  vue_admin_dist:
+    name: vue_admin_build_dist
