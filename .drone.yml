@@ -31,7 +31,7 @@ server:
   password: Dq990821
 
 steps:
-  - name: send-wechat
+  - name: start
     image: yakumioto/drone-serverchan
     settings:
       key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
@@ -46,7 +46,7 @@ steps:
       - docker-compose -f docker/docker-compose-drone.yml down
       - docker-compose -f docker/docker-compose-drone.yml up -d
 
-  - name: send-wechat
+  - name: end
     image: yakumioto/drone-serverchan
     settings:
       key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
