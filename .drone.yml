@@ -41,6 +41,7 @@ steps:
   - name: run
     commands:
       - pwd
+      - git --version
       - docker pull vuejs/ci
       - docker pull nginx
       - docker-compose -f docker/docker-compose-drone.yml down
