@@ -10,21 +10,21 @@ steps:
       password: dengqing0821
       repo: dengqing/drone-test
       dockerfile: docker/Dockerfile
-# steps:
-# - name: ssh commands
-#   image: appleboy/drone-ssh
-#   settings:
-#     host: 49.232.194.85
-#     username: root
-#     password: Dq990821
-#     port: 22
-#     script:
-#       - git --version
-#       - cd /drone/src
-#       - ls -al
-#       - ls docker -al
-#       - docker-compose -f docker/docker-compose-drone.yml up -d
 
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: 49.232.194.85
+      username: root
+      password: Dq990821
+      port: 22
+      script:
+        - pwd
+        - git --version
+        - cd /drone/src
+        - ls -al
+        - ls docker -al
+        - docker-compose -f docker/docker-compose-drone.yml up -d
 # - name: send-wechat
 #   image: yakumioto/serverchan
 #   settings:
