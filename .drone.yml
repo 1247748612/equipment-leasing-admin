@@ -12,9 +12,18 @@ steps:
       port: 22
       script:
         - git --version
+        - cd /drone/src
         - ls -al
         - ls docker -al
         - docker-compose -f docker/docker-compose-drone.yml up -d
+
+steps:
+  - name: send-wechat
+    image: yakumioto/serverchan
+    settings:
+      key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
+      text: 部署成功
+      desp: 'http://49.232.194.85:3344'
 # server:
 #   host: 49.232.194.85
 #   user: root
