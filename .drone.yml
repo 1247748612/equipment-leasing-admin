@@ -49,3 +49,4 @@ steps:
       token: 8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
       type: markdown
       message_color: true
+      tpl: tpl.md
