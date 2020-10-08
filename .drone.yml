@@ -42,6 +42,5 @@ steps:
     settings:
       token: 8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
       type: markdown
-      message_color: true
       tpl: ./tpl.md
       secret: SECaa58a0deccd7b1bd30f88a2e17ccba4f7e26543c7643b7b468ecc099c93c49f2
