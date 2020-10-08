@@ -1,6 +1,5 @@
 ---
 kind: pipeline
-type: ssh
 name: build-equipment-leasing-admin
 
 # steps:
@@ -27,11 +26,6 @@ name: build-equipment-leasing-admin
 
 clone:
   disable: true
-
-server:
-  host: 49.232.194.85
-  user: root
-  password: Dq990821
 
 steps:
   # - name: run
