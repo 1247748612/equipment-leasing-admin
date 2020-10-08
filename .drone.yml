@@ -30,8 +30,8 @@ steps:
       content_type: application/x-www-form-urlencoded;charset=UTF-8
       template: |
         {
-          "text": "{{ repo.owner }}",
-          "desp": "{{ repo.name }} | {{ build.status }} | {{ build.link }}"
+          "text": "{{ repo.name }}",
+          "desp": "{{ build.status }} | {{ build.link }}"
         }
       debug: true
 
