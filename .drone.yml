@@ -29,7 +29,7 @@ steps:
       template: |
         {
           "text": "{{ repo.owner }}",
-          "desp": "{{ repo.name }} | {{ build.status }}",
+          "desp": "{{ repo.name }} | {{ build.status }} $DRONE_GIT_HTTP_URL",
         }
       debug: true
     # - name: dingtalk
