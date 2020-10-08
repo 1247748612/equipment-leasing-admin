@@ -22,7 +22,7 @@ steps:
   #     - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
   #     - docker-compose -f docker/docker-compose-drone.yml up -d
 
-  - name: send
+  - name: send-post
     image: plugins/webhook
     settings:
       urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send
@@ -33,7 +33,7 @@ steps:
           "desp": "{{ repo.name }} | {{ build.status }} $DRONE_GIT_HTTP_URL",
         }
       debug: true
-  - name: send
+  - name: send-get
     image: plugins/webhook
     settings:
       urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send?text=主人服务器又挂掉啦~
