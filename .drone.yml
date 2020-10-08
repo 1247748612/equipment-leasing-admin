@@ -21,7 +21,6 @@ steps:
       script:
         - pwd
         - git --version
-        - cd /drone/src
         - ls -al
         - ls docker -al
         - docker-compose -f docker/docker-compose-drone.yml up -d
