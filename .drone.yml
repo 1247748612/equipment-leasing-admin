@@ -25,7 +25,7 @@ steps:
   - name: send
     image: plugins/webhook
     settings:
-      urls: http://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send
+      urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send
       method: POST
       content_type: application/x-www-form-urlencoded; charset=UTF-8
       template: |
