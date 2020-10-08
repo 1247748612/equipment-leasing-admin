@@ -1,19 +1,30 @@
 ---
 kind: pipeline
-type: exec
-name: exec-build-equipment-leasing-admin
+name: build-equipment-leasing-admin
 
+steps:
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: 49.232.194.85
+      username: root
+      password: Dq990821
+      port: 22
+      script:
+        - git --version
+        - docker-compose -f ./docker/docker-compose-drone.yml -d
 # server:
 #   host: 49.232.194.85
 #   user: root
 #   password: Dq990821
 
-steps:
-  - name: run
-    commands:
-      - git --version
-      - echo git
-      - docker-compose -f ./docker/docker-compose-drone.yml -d
+# steps:
+#   - name: run
+#     commands:
+#       - git --version
+#       - echo git
+#       - docker-compose -f ./docker/docker-compose-drone.yml -d
+
 # steps:
 #   - name: build-test
 #     image: docker
