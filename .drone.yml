@@ -3,26 +3,35 @@ kind: pipeline
 name: build-equipment-leasing-admin
 
 steps:
-  - name: ssh commands
-    image: appleboy/drone-ssh
+  - name: docker-push
+    image: plugins/docker
     settings:
-      host: 49.232.194.85
-      username: root
-      password: Dq990821
-      port: 22
-      script:
-        - git --version
-        - cd /drone/src
-        - ls -al
-        - ls docker -al
-        - docker-compose -f docker/docker-compose-drone.yml up -d
+      username: dengqing
+      password: dengqing0821
+      repo: drone-test
+      dockerfile: docker/Dockerfile
+# steps:
+# - name: ssh commands
+#   image: appleboy/drone-ssh
+#   settings:
+#     host: 49.232.194.85
+#     username: root
+#     password: Dq990821
+#     port: 22
+#     script:
+#       - git --version
+#       - cd /drone/src
+#       - ls -al
+#       - ls docker -al
+#       - docker-compose -f docker/docker-compose-drone.yml up -d
 
-  - name: send-wechat
-    image: yakumioto/serverchan
-    settings:
-      key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
-      text: 部署成功
-      desp: "http://49.232.194.85:3344"
+# - name: send-wechat
+#   image: yakumioto/serverchan
+#   settings:
+#     key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
+#     text: 部署成功
+#     desp: "http://49.232.194.85:3344"
+
 # server:
 #   host: 49.232.194.85
 #   user: root
