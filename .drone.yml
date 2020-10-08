@@ -23,6 +23,7 @@ kind: pipeline
 type: docker
 name: notify
 # https://oapi.dingtalk.com/robot/send?access_token=8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
+
 steps:
   - name: dingtalk
     image: lddsb/drone-dingtalk-message
