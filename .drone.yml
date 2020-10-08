@@ -31,7 +31,7 @@ steps:
       template: |
         {
           "text": "{{ repo.owner }}",
-          "desp": "{{ repo.name }} | {{ build.status }},
+          "desp": "{{ repo.name }} | {{ build.status }}",
         }
       debug: true
 
