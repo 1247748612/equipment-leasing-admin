@@ -21,7 +21,7 @@ steps:
   #     - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
   #     - docker-compose -f docker/docker-compose-drone.yml up -d
 
-  - name: dingtalk-send
+  - name: dingtalk
     image: lddsb/drone-dingtalk-message
     settings:
       token: 8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
