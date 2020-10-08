@@ -5,6 +5,7 @@ name: build-equipment-leasing-admin
 
 clone:
   disabled: true
+
 # server:
 #   host: 49.232.194.85
 #   user: root
