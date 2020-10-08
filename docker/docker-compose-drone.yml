@@ -4,7 +4,6 @@ services:
   admin:
     build:
       context: ..
-      image: admin-image
     container_name: vue-admin
     volumes:
       - vue_admin_dist:/app/dist

@@ -37,6 +37,5 @@ steps:
       - git --version
       - docker pull vuejs/ci
       - docker pull nginx
-      - docker-compose -f docker/docker-compose-drone.yml down -v
-      - docker rmi admin-image
+      - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
       - docker-compose -f docker/docker-compose-drone.yml up -d
