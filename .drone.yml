@@ -31,14 +31,14 @@ steps:
       template: |
         {
           "text": "{{ repo.owner }}",
-          "desp": "{{ repo.name }} | {{ build.status }}",
+          "desp": "{{ repo.name }} | {{ build.status }}"
         }
       debug: true
 
   - name: send-get
     image: plugins/webhook
     settings:
-      urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send?text=主人服务器又挂掉啦~123
+      urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send?text=测试可行性
       method: GET
       debug: true
     # - name: dingtalk
