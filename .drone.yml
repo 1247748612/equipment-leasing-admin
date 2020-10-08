@@ -1,52 +1,42 @@
 ---
 kind: pipeline
 name: build-equipment-leasing-admin
+# steps:
+# - name: docker-push
+#   image: plugins/docker
+#   settings:
+#     username: dengqing
+#     password: dengqing0821
+#     repo: dengqing/drone-test
+#     dockerfile: docker/Dockerfile
+# ---
+# - name: ssh commands
+#   image: appleboy/drone-ssh
+#   settings:
+#     host: 49.232.194.85
+#     username: root
+#     password: Dq990821
+#     port: 22
+#     script:
+#       - pwd
+#       - ls -al
+#       - ls docker -al
+#       - docker-compose -f docker/docker-compose-drone.yml up -d
+
+server:
+  host: 49.232.194.85
+  user: root
+  password: Dq990821
 
 steps:
-  #   - name: docker-push
-  #     image: plugins/docker
-  #     settings:
-  #       username: dengqing
-  #       password: dengqing0821
-  #       repo: dengqing/drone-test
-  #       dockerfile: docker/Dockerfile
+  - name: run
+    commands:
+      - git --version
+      - docker-compose -f docker/docker-compose-drone.yml -d up
 
-  - name: ssh commands
-    image: appleboy/drone-ssh
+  - name: send-wechat
+    image: yakumioto/serverchan
     settings:
-      host: 49.232.194.85
-      username: root
-      password: Dq990821
-      port: 22
-      script:
-        - pwd
-        - git --version
-        - ls -al
-        - ls docker -al
-        - docker-compose -f docker/docker-compose-drone.yml up -d
-# - name: send-wechat
-#   image: yakumioto/serverchan
-#   settings:
-#     key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
-#     text: 部署成功
-#     desp: "http://49.232.194.85:3344"
-
-# server:
-#   host: 49.232.194.85
-#   user: root
-#   password: Dq990821
-
-# steps:
-#   - name: run
-#     commands:
-#       - git --version
-#       - echo git
-#       - docker-compose -f ./docker/docker-compose-drone.yml -d
-
-# steps:
-#   - name: build-test
-#     image: docker
-#     commands:
-#       - docker build -t drone-test  -f .\DroneDockerfile .
-#       - docker pull drone-test
-#       - echo hello world
+      key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
+      text: 部署成功
+      desp: "http://49.232.194.85:3344"
