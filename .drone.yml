@@ -35,6 +35,7 @@ steps:
     commands:
       - pwd
       - git --version
+      - docker pull vuejs/ci
       - docker-compose -f docker/docker-compose-drone.yml up -d
 
   - name: send-wechat
