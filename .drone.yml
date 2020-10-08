@@ -25,14 +25,14 @@ name: build-equipment-leasing-admin
 #       - docker-compose -f docker/docker-compose-drone.yml up -d
 
 steps:
-  # - name: run
-  #   commands:
-  #     - pwd
-  #     - git --version
-  #     - docker pull vuejs/ci
-  #     - docker pull nginx
-  #     - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
-  #     - docker-compose -f docker/docker-compose-drone.yml up -d
+  - name: run
+    commands:
+      - pwd
+      - git --version
+      - docker pull vuejs/ci
+      - docker pull nginx
+      - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
+      - docker-compose -f docker/docker-compose-drone.yml up -d
   # https://oapi.dingtalk.com/robot/send?access_token=8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
   - name: dingtalk
     image: lddsb/drone-dingtalk-message
