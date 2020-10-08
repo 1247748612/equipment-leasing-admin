@@ -4,7 +4,7 @@ kind: pipeline
 name: build-equipment-leasing-admin
 
 clone:
-  disabled: true
+  disable: true
 
 # server:
 #   host: 49.232.194.85
