@@ -33,8 +33,10 @@ server:
 steps:
   - name: run
     commands:
+      - pwd
       - git --version
-      - docker-compose -f docker/docker-compose-drone.yml -d up
+      - ls -al
+      - docker-compose -f docker/docker-compose-drone.yml up -d
 
   - name: send-wechat
     image: yakumioto/serverchan
