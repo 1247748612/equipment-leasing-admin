@@ -13,7 +13,7 @@ steps:
       script:
         - git --version
         - git branch
-        - docker-compose -f ./docker/docker-compose-drone.yml -d
+        - docker-compose -f ./docker/docker-compose-drone.yml -d up
 # server:
 #   host: 49.232.194.85
 #   user: root
