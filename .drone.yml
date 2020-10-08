@@ -12,7 +12,7 @@ steps:
       port: 22
       script:
         - git --version
-        - ls -al
+        # - ls -al
         - docker-compose -f docker/docker-compose-drone.yml up -d
 # server:
 #   host: 49.232.194.85
