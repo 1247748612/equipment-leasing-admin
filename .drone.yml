@@ -35,7 +35,6 @@ steps:
     commands:
       - pwd
       - git --version
-      - ls -al
       - docker-compose -f docker/docker-compose-drone.yml up -d
 
   - name: send-wechat
