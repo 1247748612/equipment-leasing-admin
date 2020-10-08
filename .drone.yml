@@ -31,13 +31,6 @@ server:
   password: Dq990821
 
 steps:
-  - name: start
-    image: yakumioto/drone-serverchan
-    settings:
-      key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
-      text: 开始部署
-      desp: run run
-
   - name: run
     commands:
       - pwd
@@ -46,10 +39,3 @@ steps:
       - docker pull nginx
       - docker-compose -f docker/docker-compose-drone.yml down -v
       - docker-compose -f docker/docker-compose-drone.yml up -d
-
-  - name: end
-    image: yakumioto/drone-serverchan
-    settings:
-      key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
-      text: 部署成功
-      desp: 请访问：http://49.232.194.85:3344
