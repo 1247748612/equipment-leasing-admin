@@ -26,14 +26,14 @@ steps:
     image: plugins/webhook
     settings:
       urls: http://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send
-      method: POST
       content_type: application/x-www-form-urlencoded;charset=UTF-8
       template: |
         {
-          "text": "{{ repo.name }}",
-          "desp": "{{ build.status }} | {{ build.link }}"
+          "text": "{{ repo.owner }}",
+          "desp": "{{ repo.name }}",
         }
       debug: true
+      skip_verify: true
 
   - name: send-get
     image: plugins/webhook
