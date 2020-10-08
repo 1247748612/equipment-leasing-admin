@@ -1,31 +1,10 @@
 ---
 kind: pipeline
+type: ssh
 name: build-equipment-leasing-admin
 
-# steps:
-# - name: docker-push
-#   image: plugins/docker
-#   settings:
-#     username: dengqing
-#     password: dengqing0821
-#     repo: dengqing/drone-test
-#     dockerfile: docker/Dockerfile
-# ---
-# - name: ssh commands
-#   image: appleboy/drone-ssh
-#   settings:
-#     host: 49.232.194.85
-#     username: root
-#     password: Dq990821
-#     port: 22
-#     script:
-#       - pwd
-#       - ls -al
-#       - ls docker -al
-#       - docker-compose -f docker/docker-compose-drone.yml up -d
-
 steps:
-  - name: run
+  - name: ssh-run
     commands:
       - pwd
       - git --version
@@ -33,7 +12,13 @@ steps:
       - docker pull nginx
       - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
       - docker-compose -f docker/docker-compose-drone.yml up -d
-  # https://oapi.dingtalk.com/robot/send?access_token=8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
+
+---
+kind: pipeline
+type: docker
+name: notify
+# https://oapi.dingtalk.com/robot/send?access_token=8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
+steps:
   - name: dingtalk
     image: lddsb/drone-dingtalk-message
     settings:
