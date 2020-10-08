@@ -8,7 +8,7 @@ steps:
     settings:
       username: dengqing
       password: dengqing0821
-      repo: drone-test
+      repo: dengqing/drone-test
       dockerfile: docker/Dockerfile
 # steps:
 # - name: ssh commands
