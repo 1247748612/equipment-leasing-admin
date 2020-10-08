@@ -36,7 +36,7 @@ steps:
     settings:
       key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
       text: 开始部署
-      desp: run
+      desp: run run
 
   - name: run
     commands:
