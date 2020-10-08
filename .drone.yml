@@ -3,6 +3,11 @@ kind: pipeline
 type: ssh
 name: build-equipment-leasing-admin
 
+server:
+  host: 49.232.194.85
+  user: root
+  password: Dq990821
+
 steps:
   - name: ssh-run
     commands:
