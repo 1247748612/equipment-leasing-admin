@@ -39,7 +39,7 @@ steps:
       - docker-compose -f docker/docker-compose-drone.yml up -d
 
   - name: send-wechat
-    image: yakumioto/serverchan
+    image: yakumioto/drone-serverchan
     settings:
       key: SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1
       text: 部署成功

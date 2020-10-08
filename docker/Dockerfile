@@ -1,4 +1,4 @@
-FROM vuejs/ci as admin
+FROM vuejs/ci AS admin
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
