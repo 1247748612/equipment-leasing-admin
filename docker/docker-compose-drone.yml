@@ -11,7 +11,8 @@ services:
     image: nginx
     depends_on:
       - admin
-    ports: 3344:80
+    ports:
+      - 3344:80
     volumes:
       - vue_admin_dist:/usr/share/nginx/html
 
