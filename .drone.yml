@@ -44,7 +44,7 @@ steps:
       - git --version
       - docker pull vuejs/ci
       - docker pull nginx
-      - docker-compose -f docker/docker-compose-drone.yml down
+      - docker-compose -f docker/docker-compose-drone.yml down -v
       - docker-compose -f docker/docker-compose-drone.yml up -d
 
   - name: end
