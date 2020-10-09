@@ -1,11 +1,7 @@
 ---
 kind: pipeline
 type: ssh
-type: docker
 name: build-equipment-leasing-admin
-
-clone:
-  disable: true
 
 server:
   host: 49.232.194.85
