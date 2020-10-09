@@ -16,5 +16,5 @@ steps:
       - docker pull vuejs/ci
       - docker pull nginx
       - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
-      - docker-compose -f docker/docker-compose-drone.ymlweqwqw
+      - docker-compose -f docker/docker-compose-drone.yml up -d
       - curl https://sc.ftqq.com/SCU2561.send?text=部署成功
