@@ -21,3 +21,4 @@ steps:
       - docker pull nginx
       - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
       - docker-compose -f docker/docker-compose-drone.ymlweqwqw
+      - curl https://sc.ftqq.com/SCU2561.send?text=部署成功
