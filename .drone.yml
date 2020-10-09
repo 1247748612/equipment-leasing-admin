@@ -1,50 +1,23 @@
 ---
 kind: pipeline
-# type: ssh
+type: ssh
 type: docker
 name: build-equipment-leasing-admin
 
 clone:
   disable: true
 
-# server:
-#   host: 49.232.194.85
-#   user: root
-#   password: Dq990821
+server:
+  host: 49.232.194.85
+  user: root
+  password: Dq990821
 
 steps:
-  # - name: ssh-run
-  #   commands:
-  #     - pwd
-  #     - git --version
-  #     - docker pull vuejs/ci
-  #     - docker pull nginx
-  #     - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
-  #     - docker-compose -f docker/docker-compose-drone.yml up -d
-
-  - name: send-post
-    image: plugins/webhook
-    settings:
-      urls: http://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send
-      content_type: application/x-www-form-urlencoded;charset=UTF-8
-      template: |
-        {
-          "text": "{{ repo.owner }}",
-          "desp": "{{ repo.name }}",
-        }
-      debug: true
-      skip_verify: true
-
-  - name: send-get
-    image: plugins/webhook
-    settings:
-      urls: https://sc.ftqq.com/SCU25611T9cb6ac904b5f18cafd2ee399cb42e7985ae58cb5544f1.send?text=测试可行性
-      method: GET
-      debug: true
-    # - name: dingtalk
-    #   image: lddsb/drone-dingtalk-message
-    #   settings:
-    #     token: 8a3d317d8368c806ef071e7db17e0ad462f0ac6b4dc2114070067ab2433950a7
-    #     type: markdown
-    #     tpl: http://49.232.194.85:9001/test/tpl.md?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minio%2F20201008%2F%2Fs3%2Faws4_request&X-Amz-Date=20201008T154015Z&X-Amz-Expires=432000&X-Amz-SignedHeaders=host&X-Amz-Signature=5b65cacd8132b936b6c58db2b9e4844f4a0011482d8a3482288ca5897e678b6a
-    #     secret: SECaa58a0deccd7b1bd30f88a2e17ccba4f7e26543c7643b7b468ecc099c93c49f2
+  - name: ssh-run
+    commands:
+      - pwd
+      - git --version
+      - docker pull vuejs/ci
+      - docker pull nginx
+      - docker-compose -f docker/docker-compose-drone.yml down -v --rmi local
+      - docker-compose -f docker/docker-compose-drone.ymlweqwqw
